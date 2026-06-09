@@ -11,8 +11,8 @@ export const AdminProvider = ({ children }) => {
   useEffect(() => {
     if (authLoading) return;
     
-    const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
-    if (user && user.email === adminEmail) {
+    const adminEmails = import.meta.env.VITE_ADMIN_EMAIL?.split(',').map(e => e.trim()) || [];
+    if (user && adminEmails.includes(user.email)) {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
