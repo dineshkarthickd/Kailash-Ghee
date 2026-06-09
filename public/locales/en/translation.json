@@ -1,0 +1,12 @@
+{
+  "common": {
+    "shop_now": "Shop Now",
+    "add_to_cart": "Add to Cart",
+    "view_options": "View Options",
+    "out_of_stock": "Out of Stock"
+  },
+  "home": {
+    "hero_title": "Experience the pure Taste of Tradition",
+    "hero_subtitle": "Premium A2 Cow Ghee crafted with the traditional Bilona method. Rich in aroma, perfect in texture, and wholesome for your family."
+  }
+}
