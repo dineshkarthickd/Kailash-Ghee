@@ -3,7 +3,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 export const WhatsAppFloatingButton = () => {
   // Ideally, this number comes from Firebase settings
   // Using a placeholder for UI demonstration, which can be dynamically updated later
-  const whatsappNumber = "919999999999"; 
+  const whatsappNumber = "917010857596"; 
   
   return (
     <a 

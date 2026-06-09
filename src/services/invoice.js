@@ -212,7 +212,7 @@ export const generateInvoicePDF = (orderData) => {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(255, 248, 231);
-  doc.text('Kailash Ghee | info@kailashghee.com | +91 XXXXXXXXXX | Chennai, Tamil Nadu', pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.text('Kailash Ghee | info@kailashghee.com | +91 7010857596 | Chennai, Tamil Nadu', pageWidth / 2, pageHeight - 8, { align: 'center' });
 
 
   // ─── SAVE PDF ─────────────────────────────
