@@ -6,66 +6,85 @@
   html {
     scroll-behavior: smooth;
   }
-  
   body {
-    overflow-x: hidden;
-    @apply bg-cream text-darkbrown font-body antialiased;
+    @apply font-sans antialiased selection:bg-accent-mint;
+    color: theme('colors.primary');
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #F5D5B8 0%, #F6EDE1 50%, #B8D8D0 100%);
+    pointer-events: none;
+  }
+
+  .bg-background {
+    background-color: transparent !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading text-darkbrown;
+    @apply font-heading tracking-tight;
   }
 
-  /* Global element rules from user instructions */
-  img {
-    @apply object-cover;
-  }
-
-  button, a[role="button"] {
-    @apply min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition-all duration-200 hover:scale-[1.03] hover:brightness-105 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2;
-  }
-
-  input, select, textarea {
-    @apply min-h-[48px] focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-shadow;
-  }
-}
-
-@layer components {
-  .btn-primary {
-    @apply bg-gradient-to-r from-saffron to-gold text-white font-bold rounded-full py-3 px-8 shadow-md transition-all duration-200 hover:scale-[1.03] hover:brightness-105 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
-  }
-
-  .card-premium {
-    @apply bg-white rounded-2xl border border-lightgold shadow-[0_4px_20px_rgba(212,175,55,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgba(212,175,55,0.15)] hover:border-gold;
-  }
-
-  .section-title {
-    @apply font-heading text-darkbrown text-3xl md:text-4xl font-bold text-center relative pb-4 mb-8;
-  }
-  
-  .section-title::after {
-    content: '';
-    @apply absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gold rounded-full;
-  }
-
-  .bg-texture {
-    background-color: #FFFFF0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .bg-texture-dark {
-    background-color: #3B1F0A;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, #FF6B00 0%, #3B1F0A 100%);
+  /* Tamil Cursive Font Override */
+  html[lang="ta"] body,
+  html[lang="ta"] p,
+  html[lang="ta"] span,
+  html[lang="ta"] div,
+  html[lang="ta"] a,
+  html[lang="ta"] button,
+  html[lang="ta"] input,
+  html[lang="ta"] select,
+  html[lang="ta"] h1,
+  html[lang="ta"] h2,
+  html[lang="ta"] h3,
+  html[lang="ta"] h4,
+  html[lang="ta"] h5,
+  html[lang="ta"] h6,
+  html[lang="ta"] .font-sans,
+  html[lang="ta"] .font-heading {
+    font-family: 'Arima Madurai', cursive !important;
+    letter-spacing: normal !important;
   }
 }
 
 @layer utilities {
-  /* Hide scrollbar for cleaner look in horizontal scrollers */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
+  .glass {
+    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-glass;
   }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  
+  .glass-dark {
+    @apply bg-primary/80 backdrop-blur-xl border border-white/10 shadow-glass;
   }
+  
+  .neumorphic {
+    @apply bg-card rounded-2xl shadow-soft transition-all duration-300;
+  }
+  
+  .neumorphic:hover {
+    @apply shadow-soft-hover -translate-y-1;
+  }
+  
+  .neumorphic-inset {
+    @apply bg-background rounded-2xl shadow-inner-soft;
+  }
+}
+
+/* Hide scrollbar for clean look */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-[#5C838A]/60 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#5C838A]/90;
 }

@@ -1,5 +1,16 @@
 {
   "common": {
+    "brand_name": "Kailash Ghee",
+    "brand_name_first": "Kailash",
+    "brand_name_second": "Ghee",
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "login": "Login",
+    "logout": "Logout",
+    "admin_panel": "Admin Panel",
+    "account": "Account",
+    "my_orders": "My Orders",
     "shop_now": "Shop Now",
     "add_to_cart": "Add to Cart",
     "view_options": "View Options",
@@ -7,6 +18,145 @@
   },
   "home": {
     "hero_title": "Experience the pure Taste of Tradition",
-    "hero_subtitle": "Premium A2 Cow Ghee crafted with the traditional Bilona method. Rich in aroma, perfect in texture, and wholesome for your family."
+    "hero_subtitle": "Premium A2 Cow Ghee crafted with the traditional Bilona method. Rich in aroma, perfect in texture, and wholesome for your family.",
+    "hero_pretitle": "Nourish Your Body & Soul",
+    "featured_title": "Our Premium Products",
+    "view_all": "View All Products",
+    "why_choose_us": "Why Choose Kailash Ghee",
+    "how_to_order": "How to Order",
+    "our_story": "Our Story",
+    "pure_tradition": "Pure Tradition Since Generations",
+    "about_desc_1": "Kailash Ghee is crafted using the traditional Bilona method, where curd is churned by hand to extract the purest ghee. No shortcuts, no preservatives — just pure golden goodness for your family.",
+    "about_desc_2": "Made fresh in small batches and delivered across Tamil Nadu with care and love.",
+    "shop_now": "Shop Now",
+    "delivery_title": "Free Delivery Across Tamil Nadu",
+    "delivery_subtitle": "Order now and receive fresh ghee at your doorstep",
+    "order_now": "Order Now"
+  },
+  "trust": {
+    "badge1_title": "A2 Cow Milk",
+    "badge1_desc": "Sourced from Desi cows",
+    "badge2_title": "Traditional Bilona",
+    "badge2_desc": "Hand-churned in small batches",
+    "badge3_title": "100% Pure",
+    "badge3_desc": "No chemicals added",
+    "badge4_title": "Rich Aroma",
+    "badge4_desc": "Golden colour and perfect taste"
+  },
+  "why_choose_us": {
+    "feature1": {
+      "title": "100% Pure & Natural",
+      "description": "No preservatives, no artificial colours. Pure goodness from our farms to your family."
+    },
+    "feature2": {
+      "title": "Traditional Bilona Method",
+      "description": "Churned from A2 cow curd, retaining all essential nutrients and natural aroma."
+    },
+    "feature3": {
+      "title": "Fresh from Farm Daily",
+      "description": "Made fresh in small batches daily to ensure you get the best possible ghee."
+    },
+    "feature4": {
+      "title": "Fast Delivery",
+      "description": "Safe packaging and fast delivery across Tamil Nadu to your doorstep."
+    }
+  },
+  "how_it_works": {
+    "step1": {
+      "title": "Browse Products",
+      "description": "Explore our premium, pure A2 cow ghee products."
+    },
+    "step2": {
+      "title": "Add to Cart",
+      "description": "Choose your preferred size and add it to your shopping cart."
+    },
+    "step3": {
+      "title": "Payment",
+      "description": "Checkout securely via UPI or pay on delivery."
+    },
+    "step4": {
+      "title": "Get Delivered",
+      "description": "Receive fresh ghee at your doorstep quickly and safely."
+    }
+  },
+  "headings": {
+    "testimonials": "What Our Customers Say",
+    "featured": "Our Premium Products",
+    "view_all": "View All Products"
+  },
+  "reviews": {
+    "r1": {
+      "name": "Priya Sharma",
+      "location": "Chennai",
+      "text": "The best ghee I have ever tasted. Pure and aromatic!"
+    },
+    "r2": {
+      "name": "Rajesh Kumar",
+      "location": "Coimbatore",
+      "text": "Traditional flavour that reminds me of my grandmother's kitchen."
+    },
+    "r3": {
+      "name": "Meena Devi",
+      "location": "Madurai",
+      "text": "Already ordered twice. Fast delivery and great quality."
+    }
+  },
+  "products": {
+    "title": "Our Products",
+    "description": "Discover our range of pure, traditional ghee products. We ensure the highest quality by following age-old Bilona methods.",
+    "search": "Search products...",
+    "sort_default": "Sort by: Featured",
+    "sort_none": "Sort by: None",
+    "sort_low_high": "Price: Low to High",
+    "sort_high_low": "Price: High to Low",
+    "no_products": "No products found",
+    "no_products_desc": "Try adjusting your search terms or filters.",
+    "clear_filters": "Clear Filters"
+  },
+  "product": {
+    "select_size": "Select Size"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your Cart is Empty",
+    "empty_desc": "Looks like you haven't added any pure ghee to your cart yet.",
+    "continue_shopping": "Continue Shopping",
+    "you_might_like": "You Might Also Like",
+    "product": "Product",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shipping_calc": "Calculated at checkout",
+    "order_summary": "Order Summary",
+    "proceed_checkout": "Proceed to Checkout"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "delivery_address": "Delivery Address",
+    "payment_method": "Payment Method",
+    "cod": "Cash on Delivery",
+    "cod_desc": "Pay when your order arrives at your doorstep",
+    "order_summary": "Order Summary",
+    "place_order": "Place Order",
+    "sign_in": "Sign in to Continue",
+    "sign_in_desc": "Please log in to complete your purchase securely.",
+    "sign_in_google": "Sign in with Google",
+    "full_name": "Full Name",
+    "phone": "Phone Number (10 digits)",
+    "address": "Complete Address (House No, Street, Landmark)",
+    "city": "City",
+    "state": "State",
+    "pincode": "Pincode (6 digits)",
+    "qty": "Qty",
+    "free": "Free",
+    "privacy_note": "Your personal data will be used to process your order and support your experience throughout this website."
+  },
+  "footer": {
+    "brand_name": "Kailash Ghee",
+    "description": "Premium quality pure cow ghee, crafted with traditional Bilona methods for unparalleled taste and health benefits.",
+    "quick_links": "Quick Links",
+    "contact_us": "Contact Us",
+    "rights": "All rights reserved."
   }
 }

@@ -5,49 +5,44 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    screens: {
-      'sm': '481px',
-      'md': '641px',
-      'lg': '769px',
-      'xl': '1025px',
-    },
     extend: {
       colors: {
-        saffron: '#FF6B00',
-        gold: '#D4AF37',
-        ivory: '#FFFFF0',
-        darkbrown: '#3B1F0A',
-        cream: '#FFF8E7',
-        lightgold: '#F5E6C8',
-      },
-      fontFamily: {
-        heading: ['Playfair Display', 'serif'],
-        body: ['Inter', 'sans-serif'],
-      },
-      keyframes: {
-        shimmer: {
-          '100%': { transform: 'translateX(100%)' },
-        },
-        pop: {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.4)' },
-          '100%': { transform: 'scale(1)' },
-        },
-        fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        background: '#FAF6F0', // Soft creamy base
+        card: '#FFFFFF', 
+        primary: '#1F2922', // Deep charcoal/forest green for serif text
+        muted: '#5A665E', // Muted sage green
+        accent: {
+          mint: '#D1EAE2', // Soft pastel mint
+          peach: '#FDE9D6', // Soft peach
+          gold: '#B2976D', // Elegant thin border gold
         }
       },
-      animation: {
-        shimmer: 'shimmer 2s infinite',
-        pop: 'pop 0.3s ease-in-out',
-        fadeInUp: 'fadeInUp 0.5s ease-out forwards',
+      fontFamily: {
+        heading: ['"Cormorant Garamond"', 'serif'],
+        sans: ['"Montserrat"', 'sans-serif'],
       },
       backgroundImage: {
-        'pattern-dots': 'radial-gradient(rgba(212, 175, 55, 0.15) 1px, transparent 1px)',
+        'hero-gradient': 'linear-gradient(135deg, #FDE9D6 0%, #FAF6F0 40%, #D1EAE2 100%)',
       },
-      backgroundSize: {
-        'pattern-dots': '20px 20px',
+      boxShadow: {
+        'neumorphic': '10px 10px 20px rgba(180, 190, 185, 0.3), -10px -10px 20px rgba(255, 255, 255, 0.9)',
+        'neumorphic-hover': '15px 15px 30px rgba(180, 190, 185, 0.4), -15px -15px 30px rgba(255, 255, 255, 1)',
+        'neumorphic-inset': 'inset 5px 5px 10px rgba(180, 190, 185, 0.3), inset -5px -5px 10px rgba(255, 255, 255, 0.9)',
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.05)',
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'subtle-pulse': 'subtle-pulse 4s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'subtle-pulse': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.8' },
+        }
       }
     },
   },

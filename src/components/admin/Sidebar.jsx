@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiMenu, FiX, FiHome, FiBox, FiShoppingBag, FiSettings, FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
+import { BotanicalDecoration } from '../common/BotanicalDecoration';
 
 export const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,63 +21,85 @@ export const Sidebar = ({ children }) => {
   return (
     <div className="flex h-screen bg-texture overflow-hidden">
       {/* Mobile overlay */}
-      <div className={`fixed inset-0 z-40 bg-black transition-opacity duration-300 lg:hidden ${isOpen ? 'opacity-60' : 'opacity-0 pointer-events-none'}`} onClick={toggleMenu}></div>
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" 
+          onClick={toggleMenu}
+        ></div>
+      )}
       
-      <aside className={`fixed inset-y-0 left-0 z-50 w-56 bg-texture-dark text-cream transform transition-transform duration-300 lg:relative lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} shadow-2xl lg:shadow-none border-r border-gold border-opacity-20`}>
-        <div className="flex flex-col items-center justify-center h-24 bg-black bg-opacity-30 border-b border-gold border-opacity-30 relative">
-          <span className="text-2xl font-heading font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-saffron to-gold tracking-wide">
-            Kailash Ghee
-          </span>
-          <span className="text-xs text-lightgold mt-1 tracking-widest uppercase">Admin Portal</span>
-          <button onClick={toggleMenu} className="absolute right-4 top-4 lg:hidden text-lightgold hover:text-saffron p-2">
-            <FiX className="h-6 w-6" />
+      {/* Sidebar */}
+      <aside 
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-background/80 backdrop-blur-xl border-r-[1px] border-primary/10 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } lg:relative lg:translate-x-0`}
+      >
+        <div className="p-8 border-b-[1px] border-primary/10 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="font-heading text-2xl tracking-widest text-primary uppercase">
+              Kailash <span className="opacity-70">Ghee</span>
+            </span>
+            <span className="font-sans text-[10px] uppercase tracking-widest text-primary/50 mt-1">Admin Portal</span>
+          </div>
+          <button onClick={toggleMenu} className="lg:hidden text-primary hover:bg-primary/5 p-2 rounded-full transition-colors">
+            <FiX className="w-5 h-5" />
           </button>
         </div>
         
-        <nav className="flex flex-col h-[calc(100%-6rem)] px-4 py-8 overflow-y-auto">
-          <div className="space-y-3 flex-1">
+        <nav className="flex-1 flex flex-col justify-between overflow-y-auto py-6">
+          <div className="px-4 space-y-1">
             {navItems.map(item => {
               const isActive = pathname === item.path;
               return (
                 <Link 
                   key={item.name} 
                   to={item.path} 
-                  className={`relative flex items-center px-3 py-2 text-sm font-medium rounded-r-lg transition-all duration-300 min-h-[40px] group overflow-hidden ${isActive ? 'bg-white bg-opacity-10 text-gold border-l-4 border-gold' : 'text-ivory hover:bg-white hover:bg-opacity-5 border-l-4 border-transparent hover:border-gold hover:border-opacity-50'}`}
+                  className={`flex items-center gap-4 px-6 py-4 rounded-xl font-sans text-[13px] uppercase tracking-widest transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-primary/5 text-primary border-[1px] border-primary/20 shadow-sm' 
+                      : 'text-primary/60 hover:bg-primary/5 hover:text-primary border-[1px] border-transparent'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
-                  {/* Subtle Shimmer Effect for Active Item */}
-                  {isActive && <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white to-transparent opacity-10 animate-[shimmer_2s_infinite]"></div>}
-                  
-                  <span className={`mr-3 text-lg transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</span>
-                  <span className="font-heading text-sm tracking-wide">{item.name}</span>
+                  <span className={`${isActive ? 'text-primary' : 'text-primary/50'}`}>{item.icon}</span>
+                  <span>{item.name}</span>
                 </Link>
               );
             })}
           </div>
           
-          <div className="mt-auto pt-6 border-t border-gold border-opacity-30">
+          <div className="px-4 mt-8">
             <button 
               onClick={logout}
-              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-ivory hover:text-white hover:bg-red-900 hover:bg-opacity-40 transition-colors min-h-[40px]"
+              className="w-full flex items-center gap-4 px-6 py-4 rounded-xl font-sans text-[13px] uppercase tracking-widest text-red-800/70 hover:bg-red-50 hover:text-red-800 border-[1px] border-transparent hover:border-red-100 transition-all duration-300"
             >
-              <span className="mr-3 text-lg"><FiLogOut /></span>
-              <span className="font-heading text-sm tracking-wide">Logout</span>
+              <span><FiLogOut /></span>
+              <span>Logout</span>
             </button>
           </div>
         </nav>
       </aside>
 
-      <div className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="flex items-center justify-between h-16 px-4 sm:px-6 bg-white shadow-sm lg:hidden border-b border-lightgold z-20 relative">
-          <div className="flex items-center">
-            <button onClick={toggleMenu} className="text-darkbrown hover:text-saffron focus:outline-none p-2 -ml-2 min-h-[44px]">
-              <FiMenu className="h-6 w-6" />
-            </button>
-            <span className="ml-2 text-xl font-heading font-bold text-darkbrown">Admin Panel</span>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
+        <BotanicalDecoration position="top-right" className="scale-125 -translate-y-24 opacity-5 pointer-events-none" />
+        <BotanicalDecoration position="bottom-left" className="scale-150 translate-y-32 opacity-5 pointer-events-none" />
+        
+        <header className="lg:hidden bg-background/80 backdrop-blur-md border-b-[1px] border-primary/10 sticky top-0 z-30">
+          <div className="px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button onClick={toggleMenu} className="text-primary p-2 -ml-2 rounded-full hover:bg-primary/5 transition-colors">
+                <FiMenu className="w-6 h-6 stroke-[1.5]" />
+              </button>
+              <span className="font-heading text-xl text-primary">Admin Portal</span>
+            </div>
           </div>
         </header>
-        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-10 relative z-10">
-          {children}
+        
+        <main className="flex-1 overflow-y-auto bg-transparent relative z-10">
+          <div className="p-6 lg:p-10 max-w-7xl mx-auto w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>
