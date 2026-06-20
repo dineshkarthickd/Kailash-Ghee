@@ -1,56 +1,64 @@
+import React from 'react';
 import { FiShield, FiSun, FiClock, FiTruck } from 'react-icons/fi';
-import { Reveal } from '../common/Reveal';
+import { useTranslation } from 'react-i18next';
+import { BotanicalDecoration } from '../common/BotanicalDecoration';
 
 export const WhyChooseUs = () => {
+  const { t } = useTranslation();
+
   const features = [
     {
       id: 1,
-      icon: <FiShield className="w-5 h-5" />,
-      title: '100% Pure & Natural',
-      description: 'No preservatives, no artificial colors. Just pure, wholesome goodness from our farms to your family.'
+      icon: <FiShield className="" />,
+      title: t('why_choose_us.feature1.title', '100% Pure & Natural'),
+      description: t('why_choose_us.feature1.description', 'No preservatives, no artificial colors. Just pure, wholesome goodness from our farms to your family.')
     },
     {
       id: 2,
-      icon: <FiSun className="w-5 h-5" />,
-      title: 'Traditional Bilona Method',
-      description: 'Churned from the curd of A2 cow milk, retaining all essential nutrients and natural aroma.'
+      icon: <FiSun className="" />,
+      title: t('why_choose_us.feature2.title', 'Traditional Bilona Method'),
+      description: t('why_choose_us.feature2.description', 'Churned from the curd of A2 cow milk, retaining all essential nutrients and natural aroma.')
     },
     {
       id: 3,
-      icon: <FiClock className="w-5 h-5" />,
-      title: 'Farm Fresh Daily',
-      description: 'Produced in small batches every day to ensure you receive the freshest ghee possible.'
+      icon: <FiClock className="" />,
+      title: t('why_choose_us.feature3.title', 'Farm Fresh Daily'),
+      description: t('why_choose_us.feature3.description', 'Produced in small batches every day to ensure you receive the freshest ghee possible.')
     },
     {
       id: 4,
-      icon: <FiTruck className="w-5 h-5" />,
-      title: 'Fast Delivery',
-      description: 'Secure packaging and swift delivery across Tamil Nadu right to your doorstep.'
+      icon: <FiTruck className="" />,
+      title: t('why_choose_us.feature4.title', 'Fast Delivery'),
+      description: t('why_choose_us.feature4.description', 'Secure packaging and swift delivery across Tamil Nadu right to your doorstep.')
     }
   ];
 
   return (
-    <div className="bg-ivory py-8 md:py-12 relative bg-pattern-dots bg-opacity-5">
-      <div className="max-w-6xl mx-auto w-full px-4 relative z-10">
-        <Reveal>
-          <h2 className="font-heading font-extrabold text-xl md:text-2xl lg:text-3xl text-darkbrown text-center mb-6">Why Choose Kailash Ghee</h2>
-        </Reveal>
+    <div className="py-12 lg:py-16 bg-background relative overflow-hidden">
+      <BotanicalDecoration position="left" className="scale-125 -translate-y-20" />
+
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="font-heading text-4xl lg:text-5xl text-primary font-normal">
+            {t('home.why_choose_us', 'Why Choose Kailash Ghee')}
+          </h2>
+          <div className="w-16 h-[1px] bg-accent-gold mx-auto mt-6"></div>
+        </div>
         
-        <div className="mt-6 md:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {features.map((feature, index) => (
-            <Reveal key={feature.id} delay={index * 100} className="h-full">
-              <div className="bg-gradient-to-b from-cream to-white p-4 rounded-2xl border border-lightgold shadow-[0_4px_20px_rgba(212,175,55,0.05)] text-center flex flex-col items-center group transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(212,175,55,0.2)] hover:border-gold h-full">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-saffron to-gold flex items-center justify-center text-white mb-4 transition-all duration-300 shadow-md group-hover:shadow-[0_0_20px_rgba(212,175,55,0.6)]">
-                  {feature.icon}
-                </div>
-                <h3 className="font-heading text-sm md:text-base font-bold text-darkbrown mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-darkbrown opacity-80 text-xs md:text-sm leading-relaxed">
-                  {feature.description}
-                </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {features.map((feature) => (
+            <div key={feature.id} className="flex flex-col items-center text-center group">
+              <div className="p-4 rounded-full bg-accent-peach/30 text-primary mb-6 group-hover:bg-primary group-hover:text-background transition-colors duration-300">
+                {/* Clone icon to set standard size/stroke */}
+                {React.cloneElement(feature.icon, { className: "w-8 h-8 stroke-[1]" })}
               </div>
-            </Reveal>
+              <h3 className="font-heading text-2xl text-primary mb-4 font-normal">
+                {feature.title}
+              </h3>
+              <p className="font-sans text-[15px] text-muted leading-relaxed max-w-[280px]">
+                {feature.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>

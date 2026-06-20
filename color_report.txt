@@ -1,0 +1,76 @@
+FILE: src\components\common\LanguageToggle.jsx:14
+LINE: className="px-2 py-1 text-xs font-bold border-2 border-gold text-charcoal rounded-full hover:bg-gradient-to-r hover:from-gold hover:to-gold hover:text-white hover:border-transparent transition-all duration-300 shadow-[0_2px_10px_rgba(212,175,55,0.15)] flex items-center gap-2"
+MATCHES: border-gold, from-gold, to-gold
+---
+FILE: src\components\common\LanguageToggle.jsx:17
+LINE: <span className="w-4 h-4 flex items-center justify-center bg-cream rounded-full text-[10px] text-gold font-black">
+MATCHES: text-gold
+---
+FILE: src\components\common\Navbar.jsx:104
+LINE: <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-gold rounded-full">
+MATCHES: bg-gold
+---
+FILE: src\components\home\FeaturedProducts.jsx:19
+LINE: <div className="w-12 h-[3px] bg-gold mx-auto mt-3"></div>
+MATCHES: bg-gold
+---
+FILE: src\components\home\HeroBanner.jsx:13
+LINE: <div className="w-full" style={{ background: 'linear-gradient(135deg, #0A0A0A 0%, #0F2818 60%, #1B4332 100%)' }}>
+MATCHES: #1B4332
+---
+FILE: src\components\home\HowItWorks.jsx:43
+LINE: <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gold/20 z-0"></div>
+MATCHES: bg-gold
+---
+FILE: src\components\home\HowItWorks.jsx:52
+LINE: <div className="absolute inset-0 bg-gold opacity-10 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
+MATCHES: bg-gold
+---
+FILE: src\components\home\HowItWorks.jsx:53
+LINE: <div className="absolute inset-2 bg-white border-2 border-gold rounded-full flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-white transition-colors duration-300 shadow-md">
+MATCHES: text-gold, bg-gold, border-gold
+---
+FILE: src\components\home\Testimonials.jsx:39
+LINE: <div className="w-12 h-[3px] bg-gold mx-auto mt-3"></div>
+MATCHES: bg-gold
+---
+FILE: src\components\home\Testimonials.jsx:48
+LINE: <FiStar key={i} className="w-4 h-4 fill-gold text-gold" />
+MATCHES: text-gold
+---
+FILE: src\components\home\WhyChooseUs.jsx:41
+LINE: <div className="w-12 h-[3px] bg-gold mx-auto mt-3"></div>
+MATCHES: bg-gold
+---
+FILE: src\pages\admin\Dashboard.jsx:29
+LINE: <div className="w-12 h-12 rounded-full bg-gold/10 text-gold flex items-center justify-center mr-4">
+MATCHES: text-gold, bg-gold
+---
+FILE: src\pages\admin\ManageOrders.jsx:86
+LINE: order.orderStatus === 'confirmed' ? 'bg-gold/10 text-gold' :
+MATCHES: text-gold, bg-gold
+---
+FILE: src\pages\admin\ManageProducts.jsx:175
+LINE: className={`px-3 py-1.5 rounded-md text-xs font-inter font-semibold transition-opacity hover:opacity-80 ${product.inStock ? 'bg-sage/10 text-forest border border-green-200' : 'bg-red-50 text-red-600 border border-red-200'}`}
+MATCHES: border-green-200
+---
+FILE: src\pages\customer\MyOrders.jsx:46
+LINE: 'bg-gold/20 text-gold'
+MATCHES: text-gold, bg-gold
+---
+FILE: src\pages\customer\MyOrders.jsx:81
+LINE: className="flex items-center justify-center gap-1.5 text-xs md:text-sm text-forest hover:text-gold font-semibold transition-colors min-h-[36px]"
+MATCHES: text-gold
+---
+FILE: src\pages\customer\OrderConfirmation.jsx:71
+LINE: className="flex items-center justify-center gap-2 bg-forest text-white px-6 py-2 md:py-2.5 text-sm rounded-lg font-bold hover:bg-gold transition-colors min-h-[36px]"
+MATCHES: bg-gold
+---
+FILE: src\pages\customer\OrderConfirmation.jsx:75
+LINE: <Link to="/" className="bg-cream text-charcoal border border-gold px-6 py-2 md:py-2.5 text-sm rounded-lg font-bold hover:bg-gold hover:text-white transition-colors flex items-center justify-center min-h-[36px]">
+MATCHES: bg-gold, border-gold
+---
+FILE: src\pages\customer\Products.jsx:45
+LINE: <div className="w-12 h-[3px] bg-gold mx-auto mb-6"></div>
+MATCHES: bg-gold
+---

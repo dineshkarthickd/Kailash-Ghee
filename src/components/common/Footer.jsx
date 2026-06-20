@@ -1,228 +1,89 @@
 import { Link } from 'react-router-dom';
 import { FiInstagram, FiFacebook, FiTwitter, FiMail, FiPhone } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/useAuth';
+import { BotanicalDecoration } from './BotanicalDecoration';
 
 export const Footer = () => {
+  const { t } = useTranslation();
+  const { isAdmin } = useAuth();
+
   return (
-    <footer style={{backgroundColor: '#3B1F0A'}}>
+    <footer className="bg-transparent text-primary/80 pt-12 pb-4 border-t-[1px] border-primary/10 relative overflow-hidden">
+      
+      <BotanicalDecoration position="left" className="scale-125 -translate-y-10 opacity-5" />
+      <BotanicalDecoration position="right" className="scale-125 translate-y-10 opacity-5" />
 
-      <div style={{
-        padding: '24px 16px',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
+      {/* Decorative Top Line */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent"></div>
 
-        {/* MOBILE LAYOUT - single column centered */}
-        {/* Hide on desktop */}
-        <div className="flex flex-col items-center text-center gap-4 md:hidden">
-
-          {/* Brand */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:'6px'}}>
-            <h2 style={{
-              color: '#D4AF37',
-              fontFamily: 'Playfair Display',
-              fontSize: '18px',
-              fontWeight: 'bold'
-            }}>
-              Kailash Ghee
-            </h2>
-            <p style={{
-              color: '#FFFFF0',
-              fontSize: '11px',
-              fontStyle: 'italic'
-            }}>
-              The Taste of Pure Tradition
-            </p>
-            <p style={{
-              color: 'rgba(255,255,240,0.7)',
-              fontSize: '11px',
-              maxWidth: '240px',
-              textAlign: 'center'
-            }}>
-              Premium quality pure cow ghee, crafted
-              with traditional Bilona methods for
-              unparalleled taste and health benefits.
-            </p>
-            {/* Social Icons */}
-            <div style={{
-              display: 'flex',
-              gap: '12px',
-              marginTop: '4px',
-              justifyContent: 'center'
-            }}>
-              <FiInstagram style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-              <FiFacebook style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-              <FiTwitter style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-            </div>
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-8 mb-8 relative z-10">
+        
+        {/* Column 1 - Brand */}
+        <div className="flex flex-col items-start">
+          <h2 className="font-heading text-3xl font-normal tracking-widest uppercase mb-6 text-primary">
+            {t('footer.brand_name', 'Kailash Ghee')}
+          </h2>
+          <p className="font-sans text-[15px] leading-relaxed text-primary/70 mb-8 max-w-xs">
+            {t('footer.description', 'Premium quality pure cow ghee, crafted with traditional Bilona methods for unparalleled taste and health benefits.')}
+          </p>
+          <div className="flex items-center gap-5">
+            <a href="https://www.instagram.com/kailash_ghee_odc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border-[1px] border-primary/20 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-300">
+              <FiInstagram className="w-4 h-4 stroke-[1.5]" />
+            </a>
           </div>
-
-          {/* Quick Links */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:'6px'}}>
-            <h3 style={{
-              color: '#D4AF37',
-              fontWeight: 'bold',
-              fontSize: '13px'
-            }}>
-              Quick Links
-            </h3>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: '6px 20px'
-            }}>
-              <Link to="/" style={{color:'#FFF8E7', fontSize:'11px'}}>Home</Link>
-              <Link to="/products" style={{color:'#FFF8E7', fontSize:'11px'}}>Our Products</Link>
-              <Link to="/cart" style={{color:'#FFF8E7', fontSize:'11px'}}>Cart</Link>
-              <Link to="/admin" style={{color:'#FFF8E7', fontSize:'11px'}}>Admin Login</Link>
-            </div>
-          </div>
-
-          {/* Contact */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:'6px'}}>
-            <h3 style={{
-              color: '#D4AF37',
-              fontWeight: 'bold',
-              fontSize: '13px'
-            }}>
-              Contact Us
-            </h3>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px'
-            }}>
-              <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
-                <FiMail style={{color: '#D4AF37'}} />
-                <span style={{color:'#FFF8E7', fontSize:'11px'}}>dineshkarthick1610@gmail.com</span>
-              </div>
-              <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
-                <FiPhone style={{color: '#D4AF37'}} />
-                <span style={{color:'#FFF8E7', fontSize:'11px'}}>+91 7010857596</span>
-              </div>
-              <p style={{color:'rgba(255,255,240,0.7)', fontSize:'11px', textAlign:'center'}}>
-                Chennai, Tamil Nadu, India
-              </p>
-            </div>
-          </div>
-
         </div>
 
-        {/* DESKTOP LAYOUT - 3 columns */}
-        {/* Hide on mobile */}
-        <div className="hidden md:grid md:grid-cols-3 md:gap-8 md:items-start">
+        {/* Column 2 - Quick Links */}
+        <div className="flex flex-col items-start">
+          <h3 className="font-heading text-xl font-normal text-primary mb-6 tracking-wide">
+            {t('footer.quick_links', 'Quick Links')}
+          </h3>
+          <div className="flex flex-col gap-4 font-sans text-[15px] text-primary/70">
+            <Link to="/" className="hover:text-accent-gold hover:pl-2 transition-all duration-300">{t('common.home', 'Home')}</Link>
+            <Link to="/products" className="hover:text-accent-gold hover:pl-2 transition-all duration-300">{t('common.products', 'Our Products')}</Link>
+            <Link to="/cart" className="hover:text-accent-gold hover:pl-2 transition-all duration-300">{t('common.cart', 'Cart')}</Link>
+            {isAdmin && (
+              <Link to="/admin" className="hover:text-accent-gold hover:pl-2 transition-all duration-300">Admin Pannel</Link>
+            )}
+          </div>
+        </div>
 
-          {/* Column 1 - Brand */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', gap:'8px'}}>
-            <h2 style={{
-              color: '#D4AF37',
-              fontFamily: 'Playfair Display',
-              fontSize: '20px',
-              fontWeight: 'bold'
-            }}>
-              Kailash Ghee
-            </h2>
-            <p style={{
-              color: '#FFFFF0',
-              fontSize: '12px',
-              fontStyle: 'italic'
-            }}>
-              The Taste of Pure Tradition
+        {/* Column 4 - Contact */}
+        <div className="flex flex-col items-start">
+          <h3 className="font-heading text-xl font-normal text-primary mb-6 tracking-wide">
+            {t('footer.contact_us', 'Contact Us')}
+          </h3>
+          <div className="flex flex-col gap-5 font-sans text-[15px] text-primary/70">
+            <div className="flex items-center gap-3">
+              <FiMail className="w-5 h-5 stroke-[1.5]" />
+              <a href="mailto:kailashgheeoddanchatram@gmail.com" className="hover:text-accent-gold transition-colors">
+                kailashgheeoddanchatram@gmail.com
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <FiPhone className="w-5 h-5 stroke-[1.5]" />
+              <a href="tel:+919360282155" className="hover:text-accent-gold transition-colors">
+                +91 9360282155
+              </a>
+            </div>
+            <p className="mt-2 text-sm text-primary/50">
+              Oddanchatram, Tamil Nadu, India
             </p>
-            <p style={{
-              color: 'rgba(255,255,240,0.7)',
-              fontSize: '12px',
-              maxWidth: '280px',
-              textAlign: 'left'
-            }}>
-              Premium quality pure cow ghee, crafted
-              with traditional Bilona methods for
-              unparalleled taste and health benefits.
-            </p>
-            {/* Social Icons */}
-            <div style={{
-              display: 'flex',
-              gap: '12px',
-              marginTop: '4px',
-              justifyContent: 'flex-start'
-            }}>
-              <FiInstagram style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-              <FiFacebook style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-              <FiTwitter style={{width: '24px', height: '24px', color: '#D4AF37'}} />
-            </div>
           </div>
-
-          {/* Column 2 - Quick Links */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', textAlign:'center'}}>
-            <h3 style={{
-              color: '#D4AF37',
-              fontWeight: 'bold',
-              fontSize: '14px'
-            }}>
-              Quick Links
-            </h3>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              <Link to="/" style={{color:'#FFF8E7', fontSize:'12px'}}>Home</Link>
-              <Link to="/products" style={{color:'#FFF8E7', fontSize:'12px'}}>Our Products</Link>
-              <Link to="/cart" style={{color:'#FFF8E7', fontSize:'12px'}}>Cart</Link>
-              <Link to="/admin" style={{color:'#FFF8E7', fontSize:'12px'}}>Admin Login</Link>
-            </div>
-          </div>
-
-          {/* Column 3 - Contact */}
-          <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', gap:'8px', textAlign:'right'}}>
-            <h3 style={{
-              color: '#D4AF37',
-              fontWeight: 'bold',
-              fontSize: '14px'
-            }}>
-              Contact Us
-            </h3>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              gap: '6px'
-            }}>
-              <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
-                <span style={{color:'#FFF8E7', fontSize:'12px'}}>dineshkarthick1610@gmail.com</span>
-                <FiMail style={{color: '#D4AF37'}} />
-              </div>
-              <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
-                <span style={{color:'#FFF8E7', fontSize:'12px'}}>+91 7010857596</span>
-                <FiPhone style={{color: '#D4AF37'}} />
-              </div>
-              <p style={{color:'rgba(255,255,240,0.7)', fontSize:'12px', textAlign:'right'}}>
-                Chennai, Tamil Nadu, India
-              </p>
-            </div>
-          </div>
-
         </div>
 
       </div>
 
-      {/* Copyright */}
-      <div style={{
-        borderTop: '1px solid rgba(212,175,55,0.2)',
-        padding: '10px 16px',
-        textAlign: 'center'
-      }}>
-        <p style={{
-          color: 'rgba(255,255,240,0.5)',
-          fontSize: '11px'
-        }}>
-          © {new Date().getFullYear()} Kailash Ghee. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 pt-5 border-t-[1px] border-primary/10 text-center lg:text-left flex flex-col md:flex-row items-center justify-between font-sans text-[13px] text-primary/50 uppercase tracking-widest relative z-10">
+        <p>
+          © {new Date().getFullYear()} {t('footer.brand_name', 'Kailash Ghee')}. {t('footer.rights', 'All rights reserved.')}
         </p>
+        <div className="mt-4 md:mt-0 flex gap-6">
+          <span className="cursor-pointer hover:text-accent-gold transition-colors">CRAFTED BY DINESH KARTHICK DURGADAS ♥</span>
+        </div>
       </div>
-
     </footer>
   );
 };
-

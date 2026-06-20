@@ -1,29 +1,31 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Reveal } from '../common/Reveal';
 
 export const DeliveryBanner = () => {
+  const { t } = useTranslation();
   return (
-    <section className="bg-gradient-to-r from-[#3B1F0A] via-saffron to-[#3B1F0A] py-6 md:py-10 text-center text-ivory overflow-hidden relative">
+    <section className="relative py-8 lg:py-12 bg-transparent overflow-hidden">
       {/* Subtle Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#1F2922 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
       
-      <div className="max-w-6xl mx-auto w-full px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 relative z-10 flex flex-col lg:flex-row items-center justify-between text-center lg:text-left gap-8">
         
-        <Reveal className="flex-1 text-center md:text-left">
-          <h2 className="font-heading font-extrabold text-xl md:text-2xl lg:text-3xl text-white mb-2">
-            <span className="mr-3">🚚</span>Free Delivery Available Across Tamil Nadu
+        <Reveal className="flex-1">
+          <h2 className="font-heading text-3xl lg:text-4xl text-primary font-normal mb-3 flex items-center justify-center lg:justify-start gap-3">
+            <span className="text-4xl">🚚</span>{t('home.delivery_title', 'Free Delivery Across Tamil Nadu')}
           </h2>
-          <p className="text-white opacity-90 text-xs md:text-sm font-body max-w-2xl">
-            Order now and receive fresh ghee at your doorstep
+          <p className="font-sans text-[16px] text-primary/70">
+            {t('home.delivery_subtitle', 'Order now and receive fresh ghee at your doorstep')}
           </p>
         </Reveal>
 
         <Reveal delay={150} className="flex-shrink-0">
           <Link 
             to="/products"
-            className="inline-flex items-center justify-center px-4 py-2 md:px-6 md:py-2.5 bg-ivory text-darkbrown font-bold rounded-full text-xs md:text-sm hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-300 whitespace-nowrap"
+            className="inline-block px-10 py-4 bg-primary text-background font-sans text-[13px] tracking-[0.2em] uppercase hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-full"
           >
-            Order Now
+            {t('home.order_now', 'Order Now')}
           </Link>
         </Reveal>
 

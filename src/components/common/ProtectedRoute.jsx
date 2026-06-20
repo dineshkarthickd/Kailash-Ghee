@@ -7,12 +7,12 @@ export const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const location = useLocation();
 
   if (loading || (requireAdmin && adminLoading)) {
-    return <div className="min-h-screen flex items-center justify-center bg-cream"><Loader /></div>;
+    return <div className=""><Loader /></div>;
   }
 
   if (!user) {
     if (requireAdmin) {
-      return <Navigate to="/admin" state={{ from: location }} replace />;
+      return <Navigate to="/" state={{ from: location }} replace />;
     }
     return <Navigate to="/" state={{ from: location }} replace />;
   }

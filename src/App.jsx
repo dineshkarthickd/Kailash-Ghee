@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { WhatsAppFloatingButton } from './components/common/WhatsAppFloatingButton';
@@ -30,15 +31,43 @@ function ScrollToTop() {
 
 function App() {
   const location = useLocation();
+  const { i18n } = useTranslation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language || 'en';
+  }, [i18n.language]);
 
   return (
     <div className="flex flex-col min-h-screen bg-texture">
-      <Toaster position="top-center" />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 2500,
+          style: {
+            background: '#1F2922',
+            color: '#F5EFE0',
+            fontFamily: 'var(--font-sans, sans-serif)',
+            fontSize: '13px',
+            letterSpacing: '0.05em',
+            borderRadius: '4px',
+            padding: '12px 18px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+            border: '1px solid rgba(245,239,224,0.12)',
+            maxWidth: '320px',
+          },
+          success: {
+            iconTheme: { primary: '#C8A96A', secondary: '#1F2922' },
+          },
+          error: {
+            iconTheme: { primary: '#ef4444', secondary: '#fff' },
+          },
+        }}
+      />
       
       {!isAdminRoute && <Navbar />}
       
-      <main className={`flex-grow ${!isAdminRoute ? 'pt-16 md:pt-20' : ''}`}>
+      <main className={`flex-grow ${(!isAdminRoute && location.pathname !== '/') ? 'pt-24 md:pt-28' : ''}`}>
         <ScrollToTop />
         <Routes>
           {/* Customer Routes */}
@@ -60,6 +89,9 @@ function App() {
           <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><ManageOrders /></ProtectedRoute>} />
           <Route path="/admin/products" element={<ProtectedRoute requireAdmin><ManageProducts /></ProtectedRoute>} />
           <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><Settings /></ProtectedRoute>} />
+          
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 

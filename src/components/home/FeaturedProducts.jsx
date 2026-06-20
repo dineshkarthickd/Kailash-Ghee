@@ -1,45 +1,50 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useProducts } from '../../hooks/useProducts';
+import { useAutoTranslateProducts } from '../../hooks/useAutoTranslateProducts';
 import { ProductCard } from '../products/ProductCard';
-import { Reveal } from '../common/Reveal';
+import { BotanicalDecoration } from '../common/BotanicalDecoration';
 
 export const FeaturedProducts = () => {
+  const { t } = useTranslation();
   const { products, loading } = useProducts();
+  useAutoTranslateProducts(products);
   const featured = products.slice(0, 4);
 
   return (
-    <section className="bg-[#FFF8E7] py-8 md:py-12">
-      <div className="max-w-6xl mx-auto w-full px-4">
+    <section className="py-24 bg-background relative overflow-hidden">
+      <BotanicalDecoration position="top-right" className="scale-125 -translate-y-24" />
+
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
         
-        <Reveal>
-          <div className="text-center mb-6">
-            <h2 className="font-heading font-extrabold text-xl md:text-2xl lg:text-3xl text-darkbrown mb-2">Our Premium Products</h2>
-            <p className="font-heading italic text-saffron text-xs md:text-sm font-semibold tracking-wide">Pure &bull; Natural &bull; Traditional</p>
-          </div>
-        </Reveal>
+        <div className="text-center mb-16">
+          <h2 className="font-heading text-4xl lg:text-5xl text-primary font-normal">
+            {t('headings.featured', 'Our Premium Products')}
+          </h2>
+          <div className="w-16 h-[1px] bg-accent-gold mx-auto mt-6"></div>
+        </div>
 
         {loading ? (
-          <div className="flex justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div></div>
+          <div className="flex justify-center items-center py-20">
+            <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+          </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 mb-6 md:mb-8">
-            {featured.map((product, index) => (
-              <Reveal key={product.id} delay={index * 100}>
-                <ProductCard product={product} />
-              </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {featured.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
 
-        <Reveal delay={200}>
-          <div className="text-center">
-            <Link 
-              to="/products"
-              className="inline-flex items-center justify-center px-4 py-2 text-xs md:px-6 md:py-2.5 md:text-sm border-2 border-gold font-bold rounded-full text-white bg-gradient-to-r from-saffron to-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 hover:-translate-y-1"
-            >
-              View All Products
-            </Link>
-          </div>
-        </Reveal>
+        <div className="mt-16 text-center">
+          <Link 
+            to="/products"
+            className="inline-block px-10 py-3.5 border-[1.5px] border-primary/40 hover:border-primary text-primary font-sans text-[13px] tracking-widest uppercase hover:bg-primary hover:text-background transition-all duration-300"
+          >
+            {t('headings.view_all', 'View All Products')}
+          </Link>
+        </div>
+
       </div>
     </section>
   );

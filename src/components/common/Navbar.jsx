@@ -1,190 +1,246 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiX, FiShoppingCart, FiUser, FiHome, FiShoppingBag, FiPackage, FiSettings } from 'react-icons/fi';
-import { useCart } from '../../hooks/useCart';
+import { useTranslation } from 'react-i18next';
+import { FiMenu, FiX, FiShoppingCart, FiUser, FiPackage, FiLogOut, FiLogIn, FiHome, FiGrid } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
+import { useCart } from '../../hooks/useCart';
 import { LanguageToggle } from './LanguageToggle';
+import { cn } from '../../lib/utils';
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useTranslation();
+  const { user: currentUser, logout, loginWithGoogle, isAdmin } = useAuth();
   const { cartCount } = useCart();
-  const { user, isAdmin, loginWithGoogle, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  // Close mobile menu on route change
+  useEffect(() => { setIsOpen(false); }, [location.pathname]);
 
-  const NavLink = ({ to, children }) => {
-    const isActive = location.pathname === to;
-    return (
-      <Link to={to} className="relative group text-darkbrown text-sm font-medium px-1 py-2">
-        <span className="relative z-10 group-hover:text-saffron transition-colors">{children}</span>
-        <span className={`absolute bottom-0 left-0 h-0.5 bg-saffron transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-      </Link>
-    );
-  };
-
-  const DrawerLink = ({ to, children, icon }) => {
-    const isActive = location.pathname === to;
-    return (
-      <Link 
-        to={to} 
-        onClick={() => setIsOpen(false)} 
-        className={`flex items-center h-[48px] px-6 text-sm font-heading font-medium transition-colors ${isActive ? 'text-saffron bg-yellow-50 border-l-4 border-gold' : 'text-darkbrown hover:bg-cream border-l-4 border-transparent'}`}
-      >
-        <span className="mr-4 text-lg">{icon}</span>
-        {children}
-      </Link>
-    );
-  };
+  const navLinks = [
+    { name: t('common.home'), path: '/' },
+    { name: t('common.products'), path: '/products' },
+  ];
 
   return (
-    <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${isScrolled ? 'bg-white bg-opacity-95 backdrop-blur-md shadow-[0_4px_20px_rgba(212,175,55,0.15)] py-2 border-b-2 border-gold' : 'bg-ivory py-2 md:py-3 border-b border-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-12 md:h-14 items-center relative">
-            
-            {/* Mobile Left: Hamburger */}
-            <div className="flex items-center md:hidden w-1/3">
-              <button onClick={toggleMenu} className="text-darkbrown hover:text-saffron focus:outline-none flex items-center justify-center w-[44px] h-[44px]">
-                <FiMenu className="h-6 w-6" />
-              </button>
-            </div>
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out border-b",
+        scrolled ? "bg-background/95 backdrop-blur-md shadow-sm border-primary/10" : "bg-transparent border-transparent"
+      )}
+    >
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-3 items-center px-8 lg:px-16 py-6">
 
-            {/* Desktop Left: Logo */}
-            <div className="hidden md:flex flex-1 justify-start">
-              <Link to="/" className="flex-shrink-0 flex items-center group">
-                <span className="font-heading text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-saffron to-gold tracking-wide group-hover:scale-105 transition-transform">
-                  Kailash Ghee
-                </span>
+        {/* Left: Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 justify-start">
+          {navLinks.map((link, index) => (
+            <div key={link.name} className="flex items-center gap-6 xl:gap-8">
+              <Link
+                to={link.path}
+                className="font-sans text-[13px] uppercase tracking-[0.15em] text-primary hover:text-accent-gold transition-colors"
+              >
+                {link.name}
               </Link>
-            </div>
-
-            {/* Mobile Center: Logo */}
-            <div className="flex md:hidden flex-1 justify-center w-1/3">
-              <Link to="/" className="flex-shrink-0 flex items-center group">
-                <span className="font-heading text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-saffron to-gold tracking-wide">
-                  Kailash Ghee
-                </span>
-              </Link>
-            </div>
-
-            {/* Desktop Center: Nav Links */}
-            <div className="hidden md:flex md:space-x-8 items-center flex-1 justify-center">
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/products">Products</NavLink>
-              {user && !isAdmin && <NavLink to="/my-orders">My Orders</NavLink>}
-              {isAdmin && (
-                <Link to="/admin/dashboard" className="text-saffron font-bold hover:text-gold transition-colors">
-                  Admin Panel
-                </Link>
+              {index !== navLinks.length - 1 && (
+                <span className="text-primary/20 text-xs">|</span>
               )}
             </div>
-
-            {/* Right: Actions (Language, User, Cart) */}
-            <div className="flex items-center justify-end space-x-2 md:space-x-4 w-1/3 md:flex-1">
-              <div className="hidden md:block">
-                <LanguageToggle />
-              </div>
-              <div className="hidden md:flex items-center">
-                <button 
-                  onClick={user ? logout : loginWithGoogle}
-                  className="flex items-center gap-1.5 text-darkbrown hover:text-saffron transition-colors text-sm font-bold bg-cream px-3 py-1.5 rounded-full"
-                >
-                  <FiUser className="h-4 w-4" />
-                  <span>{user ? 'Logout' : 'Login'}</span>
-                </button>
-              </div>
-              <Link to="/cart" className="relative text-darkbrown hover:text-saffron p-2 transition-colors flex items-center justify-center w-[40px] h-[40px]">
-                <FiShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 text-[9px] font-bold text-white bg-saffron rounded-full border border-white shadow-sm">
-                    {cartCount}
-                  </span>
-                )}
+          ))}
+          {/* My Orders — shown only when logged in and not admin */}
+          {currentUser && !isAdmin && (
+            <>
+              <span className="text-primary/20 text-xs">|</span>
+              <Link
+                to="/my-orders"
+                className="font-sans text-[13px] uppercase tracking-[0.15em] text-primary hover:text-accent-gold transition-colors"
+              >
+                {t('common.my_orders', 'My Orders')}
               </Link>
-            </div>
-          </div>
+            </>
+          )}
+        </nav>
+
+        {/* Mobile Hamburger */}
+        <div className="flex lg:hidden items-center justify-start">
+          <button
+            className="p-2 -ml-2 text-primary"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <FiX className="w-6 h-6" strokeWidth={1.5} /> : <FiMenu className="w-6 h-6" strokeWidth={1.5} />}
+          </button>
         </div>
-      </nav>
 
-      {/* Mobile Drawer Overlay */}
-      <div 
-        className={`fixed inset-0 z-[60] bg-black transition-opacity duration-300 md:hidden ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}
-        onClick={toggleMenu}
-      ></div>
-      
-      {/* Mobile Drawer Panel */}
-      <div className={`fixed inset-y-0 left-0 z-[70] w-[75%] max-w-sm bg-ivory shadow-2xl transform transition-transform ease-in-out duration-300 md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="h-full flex flex-col pt-6 pb-8 overflow-y-auto">
-          {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 pb-6 border-b border-lightgold">
-            <span className="font-heading text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-saffron to-gold">Kailash Ghee</span>
-            <button onClick={toggleMenu} className="text-darkbrown hover:text-saffron w-[44px] h-[44px] flex items-center justify-center rounded-full hover:bg-cream transition-colors">
-              <FiX className="h-6 w-6" />
-            </button>
+        {/* Center: Logo */}
+        <div className="flex items-center justify-center">
+          <Link to="/" className="group">
+            <span className="font-heading font-normal text-xl sm:text-2xl lg:text-3xl tracking-widest lg:tracking-[0.1em] text-primary uppercase whitespace-nowrap">
+              {t('common.brand_name_first', 'Kailash')} <span className="opacity-70">{t('common.brand_name_second', 'Ghee')}</span>
+            </span>
+          </Link>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center justify-end gap-5">
+          <div className="hidden lg:block">
+            <LanguageToggle />
           </div>
 
-          {/* Drawer Links */}
-          <nav className="flex flex-col mt-4 flex-1">
-            <DrawerLink to="/" icon={<FiHome className="w-5 h-5" />}>Home</DrawerLink>
-            <DrawerLink to="/products" icon={<FiShoppingBag className="w-5 h-5" />}>Products</DrawerLink>
-            <DrawerLink to="/cart" icon={<FiShoppingCart className="w-5 h-5" />}>Cart</DrawerLink>
-            
-            {user && !isAdmin && (
-              <DrawerLink to="/my-orders" icon={<FiPackage className="w-5 h-5" />}>My Orders</DrawerLink>
-            )}
-            
-            {isAdmin && (
-              <DrawerLink to="/admin/dashboard" icon={<FiSettings className="w-5 h-5" />}>Admin Panel</DrawerLink>
-            )}
-            
-            <div className="px-6 mt-8">
-              <div className="border-t border-cream pt-6">
-                <p className="text-sm text-darkbrown opacity-60 mb-4 font-bold uppercase tracking-wider">Language</p>
-                <LanguageToggle />
-              </div>
-            </div>
-            
-            {user ? (
-              <div className="px-6 mt-auto">
-                <div className="bg-white rounded-xl p-4 border border-lightgold flex items-center gap-3 shadow-sm">
-                  <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center text-gold">
-                    <FiUser className="w-5 h-5" />
-                  </div>
-                  <div className="overflow-hidden flex-1">
-                    <p className="text-sm font-bold text-darkbrown truncate">{user.email}</p>
-                    <button 
-                      onClick={() => { logout(); setIsOpen(false); }} 
-                      className="text-xs text-saffron hover:text-gold font-bold transition-colors"
-                    >
-                      Log Out
-                    </button>
-                  </div>
-                </div>
-              </div>
+          {/* Admin Panel link */}
+          {currentUser && isAdmin && (
+            <Link
+              to="/admin/dashboard"
+              className="hidden lg:block font-sans text-[12px] uppercase tracking-widest text-primary hover:text-accent-gold transition-colors font-medium"
+            >
+              {t('common.admin_panel', 'Admin Panel')}
+            </Link>
+          )}
+
+          {/* Login / Logout icon — desktop */}
+          <div className="hidden lg:flex items-center">
+            {currentUser ? (
+              <button
+                onClick={logout}
+                title="Logout"
+                className="group flex items-center gap-1.5 text-primary hover:text-accent-gold transition-colors"
+              >
+                <FiUser className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                <FiLogOut className="w-[14px] h-[14px] opacity-0 group-hover:opacity-100 transition-opacity -ml-0.5" strokeWidth={1.5} />
+              </button>
             ) : (
-              <div className="px-6 mt-auto">
-                <button 
-                  onClick={() => { loginWithGoogle(); setIsOpen(false); }}
-                  className="w-full flex items-center justify-center gap-2 bg-white border border-lightgold text-darkbrown font-bold py-3 px-4 rounded-xl hover:bg-yellow-50 transition-colors shadow-sm"
-                >
-                  <FiUser className="w-5 h-5 text-saffron" />
-                  Sign In
-                </button>
-              </div>
+              <button
+                onClick={loginWithGoogle}
+                title="Login"
+                className="text-primary hover:text-accent-gold transition-colors"
+              >
+                <FiUser className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              </button>
             )}
-          </nav>
+          </div>
+
+          {/* Cart */}
+          <Link to="/cart" className="flex items-center gap-1 group hover:text-accent-gold transition-colors">
+            <FiShoppingCart className="w-[18px] h-[18px] text-primary group-hover:text-accent-gold transition-colors" strokeWidth={1.5} />
+            <span className="font-sans text-sm text-primary group-hover:text-accent-gold transition-colors">
+              ({cartCount})
+            </span>
+          </Link>
         </div>
       </div>
-    </>
+
+      {/* Mobile Nav Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="absolute top-[72px] left-0 right-0 z-50 md:hidden"
+            style={{ background: 'var(--color-background, #FAF7F2)' }}
+          >
+            {/* Solid opaque panel */}
+            <div className="mx-4 mb-4 rounded-2xl border border-primary/10 shadow-2xl overflow-hidden"
+              style={{ backgroundColor: '#FAF7F2' }}
+            >
+              {/* Nav Links */}
+              <nav className="flex flex-col">
+                {/* Home */}
+                <Link
+                  to="/"
+                  className="flex items-center gap-3 px-5 py-4 border-b border-primary/8 hover:bg-primary/5 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FiHome className="w-4 h-4 text-accent-gold flex-shrink-0" strokeWidth={1.5} />
+                  <span className="font-heading text-base font-medium text-primary">{t('common.home', 'Home')}</span>
+                </Link>
+
+                {/* Products */}
+                <Link
+                  to="/products"
+                  className="flex items-center gap-3 px-5 py-4 border-b border-primary/8 hover:bg-primary/5 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FiGrid className="w-4 h-4 text-accent-gold flex-shrink-0" strokeWidth={1.5} />
+                  <span className="font-heading text-base font-medium text-primary">{t('common.products', 'Products')}</span>
+                </Link>
+
+                {/* My Orders — logged in, non-admin only */}
+                {currentUser && !isAdmin && (
+                  <Link
+                    to="/my-orders"
+                    className="flex items-center gap-3 px-5 py-4 border-b border-primary/8 hover:bg-primary/5 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <FiPackage className="w-4 h-4 text-accent-gold flex-shrink-0" strokeWidth={1.5} />
+                    <span className="font-heading text-base font-medium text-primary">{t('common.my_orders', 'My Orders')}</span>
+                  </Link>
+                )}
+
+                {/* Cart */}
+                <Link
+                  to="/cart"
+                  className="flex items-center gap-3 px-5 py-4 border-b border-primary/8 hover:bg-primary/5 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FiShoppingCart className="w-4 h-4 text-accent-gold flex-shrink-0" strokeWidth={1.5} />
+                  <span className="font-heading text-base font-medium text-primary">{t('common.cart', 'Cart')}</span>
+                  {cartCount > 0 && (
+                    <span className="ml-auto bg-accent-gold text-white text-[11px] px-2 py-0.5 rounded-full font-bold">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+
+                {/* Admin Panel — admin only */}
+                {currentUser && isAdmin && (
+                  <Link
+                    to="/admin/dashboard"
+                    className="flex items-center gap-3 px-5 py-4 border-b border-primary/8 hover:bg-primary/5 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <FiUser className="w-4 h-4 text-accent-gold flex-shrink-0" strokeWidth={1.5} />
+                    <span className="font-heading text-base font-medium text-primary">{t('common.admin_panel', 'Admin Panel')}</span>
+                  </Link>
+                )}
+              </nav>
+
+              {/* Bottom Actions */}
+              <div className="px-5 py-4 flex flex-col gap-3 bg-primary/3">
+                <LanguageToggle />
+
+                {currentUser ? (
+                  <button
+                    onClick={() => { logout(); setIsOpen(false); }}
+                    className="w-full py-3 rounded-xl border border-primary/20 text-primary font-sans text-[12px] tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-300"
+                  >
+                    <FiLogOut className="w-4 h-4" />
+                    {t('common.logout', 'Logout')}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { loginWithGoogle(); setIsOpen(false); }}
+                    className="w-full py-3 rounded-xl bg-primary text-white font-sans text-[12px] tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-primary/90 transition-all duration-300"
+                  >
+                    <FiLogIn className="w-4 h-4" />
+                    {t('common.login', 'Login')}
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };

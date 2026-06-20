@@ -3,13 +3,16 @@ import { Sidebar } from '../../components/admin/Sidebar';
 import { useOrders } from '../../hooks/useOrders';
 import { updateOrderStatus } from '../../firebase/orders';
 import { Loader } from '../../components/common/Loader';
-import { FiShoppingBag } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 export const ManageOrders = () => {
   const { orders, loading, refetch } = useOrders();
   const [updatingId, setUpdatingId] = useState(null);
-  const [filterTab, setFilterTab] = useState('All');
+  const [filter, setFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 5;
 
   const handleStatusChange = async (orderId, newStatus) => {
     setUpdatingId(orderId);
@@ -24,105 +27,152 @@ export const ManageOrders = () => {
     }
   };
 
-  const tabs = ['All', 'Pending', 'Confirmed', 'Shipped', 'Delivered'];
-  
-  const filteredOrders = filterTab === 'All' 
-    ? orders 
-    : orders.filter(o => o.orderStatus.toLowerCase() === filterTab.toLowerCase());
+  const handleFilterChange = (f) => {
+    setFilter(f);
+    setCurrentPage(1);
+  };
 
-  if (loading) return <Sidebar><Loader /></Sidebar>;
+  const filteredOrders = filter === 'all' 
+    ? orders 
+    : orders.filter(o => o.orderStatus.toLowerCase() === filter.toLowerCase());
+
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedOrders = filteredOrders.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  if (loading) return <Sidebar><div className="flex items-center justify-center h-full"><Loader /></div></Sidebar>;
 
   return (
     <Sidebar>
-      <div className="max-w-6xl mx-auto w-full px-4 py-4 md:px-6 md:py-6">
-        <div className="mb-4 animate-fadeInUp">
-          <h1 className="text-lg md:text-xl font-heading font-bold text-darkbrown border-b-2 border-gold inline-block pb-1 pr-6">Manage Orders</h1>
+      <div className="flex flex-col gap-8 h-full min-h-[80vh]">
+        
+        {/* Header */}
+        <div className="flex justify-between items-end border-b-[1px] border-primary/10 pb-4">
+          <div>
+            <h1 className="font-heading text-3xl text-primary mb-2">Manage Orders</h1>
+            <p className="font-sans text-primary/60">View and update customer orders.</p>
+          </div>
         </div>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 animate-fadeInUp" style={{animationDelay: '100ms'}}>
-        {tabs.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setFilterTab(tab)}
-            className={`px-4 py-1.5 rounded-full font-bold text-xs md:text-sm transition-all duration-300 shadow-sm ${
-              filterTab === tab 
-                ? 'bg-gradient-to-r from-saffron to-gold text-white border border-transparent shadow-md' 
-                : 'bg-white text-saffron border border-saffron hover:bg-yellow-50'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-      
-      <div className="bg-white rounded-2xl shadow-md border border-lightgold overflow-hidden animate-fadeInUp" style={{animationDelay: '200ms'}}>
-        <div className="overflow-x-auto hide-scrollbar">
-          <table className="w-full text-left whitespace-nowrap border-collapse">
-            <thead className="bg-[#3B1F0A] text-[#FFFDF8] uppercase tracking-wider text-xs">
-              <tr>
-                <th className="px-3 py-2 font-semibold sticky left-0 z-10 bg-[#3B1F0A]">Order ID</th>
-                <th className="px-3 py-2 font-semibold">Date</th>
-                <th className="px-3 py-2 font-semibold">Customer</th>
-                <th className="px-3 py-2 font-semibold">Total</th>
-                <th className="px-3 py-2 font-semibold">Payment</th>
-                <th className="px-3 py-2 font-semibold">Status</th>
-                <th className="px-3 py-2 font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-lightgold">
-              {filteredOrders.map((order, index) => (
-                <tr key={order.id} className={`hover:bg-yellow-50 hover:border-l-4 hover:border-l-gold transition-all duration-200 group ${index % 2 === 0 ? 'bg-white border-l-4 border-l-transparent' : 'bg-[#FFF8E7] border-l-4 border-l-transparent'}`}>
-                  <td className="px-3 py-2 font-bold text-darkbrown sticky left-0 z-10 group-hover:bg-yellow-50 bg-inherit shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] transition-colors text-xs md:text-sm">{order.orderId}</td>
-                  <td className="px-3 py-2 text-xs md:text-sm font-medium opacity-80">{order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : ''}</td>
-                  <td className="px-3 py-2 text-xs md:text-sm">
-                    <p className="font-bold text-darkbrown">{order.customer.name}</p>
-                    <p className="opacity-80 mt-1">{order.customer.phone}</p>
-                  </td>
-                  <td className="px-3 py-2 font-bold text-saffron text-sm md:text-base">₹{order.totalAmount}</td>
-                  <td className="px-3 py-2 text-xs md:text-sm font-medium">
-                    <span className="px-2 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border shadow-sm bg-green-100 text-green-800 border-green-200">
-                      COD
-                    </span>
-                  </td>
-                  <td className="px-3 py-2">
-                    <span className={`px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border shadow-sm ${
-                      order.orderStatus === 'delivered' ? 'bg-green-100 text-green-800 border-green-200' :
-                      order.orderStatus === 'shipped' ? 'bg-purple-100 text-purple-800 border-purple-200' :
-                      order.orderStatus === 'confirmed' ? 'bg-blue-100 text-blue-800 border-blue-200' :
-                      'bg-yellow-100 text-yellow-800 border-yellow-200'
-                    }`}>
-                      {order.orderStatus}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2">
-                    <select 
-                      value={order.orderStatus}
-                      onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
-                      disabled={updatingId === order.orderId}
-                      className="text-xs md:text-sm font-bold text-darkbrown border-2 border-lightgold rounded-full px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent cursor-pointer hover:bg-cream transition-colors min-w-[120px] shadow-sm"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="confirmed">Confirmed</option>
-                      <option value="shipped">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                    </select>
-                  </td>
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 border-b-[1px] border-primary/10 pb-6">
+          {['all', 'pending', 'confirmed', 'shipped', 'delivered'].map(f => (
+            <button 
+              key={f}
+              onClick={() => handleFilterChange(f)}
+              className={`px-6 py-2 rounded-full font-sans text-xs uppercase tracking-widest transition-all duration-300 ${
+                filter === f 
+                ? 'bg-primary text-white' 
+                : 'bg-primary/5 text-primary hover:bg-primary/10'
+              }`}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Table */}
+        <div className="flex-1 bg-white/20 backdrop-blur-md border-[1px] border-primary/20 overflow-hidden flex flex-col">
+          <div className="overflow-x-auto flex-1">
+            <table className="w-full text-left font-sans border-collapse">
+              <thead className="bg-primary/5 border-b-[1px] border-primary/20 text-xs uppercase tracking-widest text-primary/70">
+                <tr>
+                  <th className="p-4 font-medium">Order ID</th>
+                  <th className="p-4 font-medium">Date</th>
+                  <th className="p-4 font-medium">Customer</th>
+                  <th className="p-4 font-medium">Total</th>
+                  <th className="p-4 font-medium">Status</th>
+                  <th className="p-4 font-medium text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {filteredOrders.length === 0 && (
-            <div className="p-8 md:p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-full bg-cream flex items-center justify-center text-gold mb-4 shadow-inner border border-gold border-opacity-30">
-                <FiShoppingBag className="w-8 h-8" />
+              </thead>
+              <tbody className="divide-y divide-primary/10 text-sm text-primary">
+                {paginatedOrders.map(order => (
+                  <tr key={order.id} className="hover:bg-white/40 transition-colors duration-300">
+                    <td className="p-4 font-medium tracking-wide">{order.orderId || order.id.slice(0,8)}</td>
+                    <td className="p-4 text-primary/60">
+                      {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : ''}
+                    </td>
+                    <td className="p-4">
+                      <div className="flex flex-col">
+                        <span>{order.customerDetails?.name}</span>
+                        <span className="text-xs text-primary/50">{order.customerDetails?.phone}</span>
+                      </div>
+                    </td>
+                    <td className="p-4">₹{order.totalAmount}</td>
+                    <td className="p-4">
+                      <span className={`px-3 py-1 rounded-full text-xs tracking-widest uppercase ${
+                        order.orderStatus === 'pending' ? 'bg-yellow-500/20 text-yellow-700' :
+                        order.orderStatus === 'confirmed' ? 'bg-blue-500/20 text-blue-700' :
+                        order.orderStatus === 'shipped' ? 'bg-indigo-500/20 text-indigo-700' :
+                        'bg-green-500/20 text-green-700'
+                      }`}>
+                        {order.orderStatus}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <select 
+                        value={order.orderStatus}
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                        className="bg-transparent border-[1px] border-primary/30 text-primary text-xs uppercase tracking-widest p-2 outline-none focus:border-primary transition-colors cursor-pointer"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            {filteredOrders.length === 0 && (
+              <div className="flex flex-col items-center justify-center p-12 text-primary/50">
+                <p>No orders found matching the filter.</p>
               </div>
-              <h3 className="text-lg md:text-xl font-heading font-bold text-darkbrown mb-2">No orders yet</h3>
-              <p className="text-sm text-darkbrown opacity-60">When customers place orders they will appear here.</p>
+            )}
+          </div>
+          
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="border-t-[1px] border-primary/10 bg-white/40 p-4 flex items-center justify-between font-sans text-sm text-primary">
+              <span className="opacity-70">
+                Showing {startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, filteredOrders.length)} of {filteredOrders.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 border-[1px] border-primary/20 bg-white hover:bg-primary/5 disabled:opacity-50 transition-colors"
+                >
+                  <FiChevronLeft className="w-4 h-4" />
+                </button>
+                <div className="flex items-center gap-1">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`w-8 h-8 flex items-center justify-center border-[1px] transition-colors ${
+                        currentPage === i + 1 
+                        ? 'bg-primary text-white border-primary' 
+                        : 'border-primary/20 bg-white hover:bg-primary/5 text-primary'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 border-[1px] border-primary/20 bg-white hover:bg-primary/5 disabled:opacity-50 transition-colors"
+                >
+                  <FiChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           )}
         </div>
-      </div>
       </div>
     </Sidebar>
   );

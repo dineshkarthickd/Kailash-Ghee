@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { getProduct } from '../../firebase/products';
 import { useCart } from '../../hooks/useCart';
 import { Loader } from '../../components/common/Loader';
-import { FiShare2 } from 'react-icons/fi';
+import { FiShare2, FiMinus, FiPlus } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 export const ProductDetail = () => {
@@ -14,7 +14,7 @@ export const ProductDetail = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [qty, setQty] = useState(1);
   const { addToCart } = useCart();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,8 +36,13 @@ export const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <Loader />;
-  if (!product) return <div className="text-center py-20 text-darkbrown">Product not found</div>;
+  if (loading) return (
+    <div className="">
+      <div className=""></div>
+    </div>
+  );
+  
+  if (!product) return <div className="">Product not found</div>;
 
   const name = i18n.language === 'ta' && product.nameTA ? product.nameTA : product.name;
   const description = i18n.language === 'ta' && product.descriptionTA ? product.descriptionTA : product.description;
@@ -51,7 +56,7 @@ export const ProductDetail = () => {
   const handleShare = async () => {
     const shareData = {
       title: name,
-      text: 'Check out this ghee from Kailash Ghee!',
+      text: 'Check out this pure ghee from Kailash Ghee!',
       url: window.location.href,
     };
 
@@ -68,79 +73,114 @@ export const ProductDetail = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10 lg:py-14">
-      <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
-        <div className="w-full md:w-1/2">
-          <div className="aspect-square rounded-2xl overflow-hidden bg-cream border border-gold border-opacity-30 shadow-md">
+    <div className="min-h-screen bg-background pt-8 lg:pt-12 pb-24">
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          
+          {/* Left: Image Box */}
+          <div className="relative w-full aspect-[4/5] lg:aspect-square bg-[#F8F5F0] rounded-3xl overflow-hidden flex items-center justify-center p-8 lg:p-16 shadow-[inset_0_0_100px_rgba(0,0,0,0.02)]">
+            <div className="absolute inset-0 bg-gradient-to-tr from-accent-peach/20 to-transparent mix-blend-multiply"></div>
             <img 
-              src={product.imageURL || 'https://via.placeholder.com/600x600?text=Ghee'} 
+              src={product.imageURL || 'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?q=80&w=800&auto=format&fit=crop'} 
               alt={name} 
-              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?q=80&w=800&auto=format&fit=crop'; }}
+              className="relative z-10 w-full h-full object-contain mix-blend-multiply drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-out"
             />
           </div>
-        </div>
 
-        <div className="w-full md:w-1/2 flex flex-col">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-heading font-bold text-darkbrown mb-3">{name}</h1>
-          <p className="text-lg text-saffron font-bold mb-4">₹{selectedVariant?.price}</p>
-          
-          <div className="mb-4">
-            <p className="text-darkbrown opacity-80 text-xs md:text-sm leading-relaxed whitespace-pre-line">{description}</p>
-          </div>
+          {/* Right: Details Box */}
+          <div className="flex flex-col">
+            
+            <p className="font-sans text-[12px] text-primary/50 tracking-[0.3em] uppercase mb-3">
+              {i18n.language === 'ta' && product.categoryTA ? product.categoryTA : (product.category || 'Premium Collection')}
+            </p>
+            
+            <h1 className="font-heading text-4xl lg:text-5xl text-primary font-normal leading-tight mb-4">
+              {name}
+            </h1>
+            
+            <p className="font-sans text-2xl text-primary font-medium mb-8">
+              ₹{selectedVariant?.price}
+            </p>
+            
+            <div className="w-16 h-[1px] bg-accent-gold mb-8"></div>
+            
+            <div className="mb-10">
+              <p className="font-sans text-[15px] lg:text-[16px] text-primary/80 leading-relaxed">
+                {description || "Experience the pure, luxurious taste of traditional grass-fed ghee, sustainably sourced for radiant health."}
+              </p>
+            </div>
 
-          <div className="mb-4 md:mb-6">
-            <h3 className="text-xs md:text-sm font-semibold text-darkbrown mb-2 uppercase tracking-wider">Select Size</h3>
-            <div className="flex flex-wrap gap-2 md:gap-3">
-              {product.variants.map((v, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedVariant(v)}
-                  className={`px-4 py-2 text-xs md:text-sm rounded-lg border-2 font-medium transition-all ${
-                    selectedVariant?.size === v.size 
-                      ? 'border-saffron bg-saffron bg-opacity-10 text-saffron' 
-                      : 'border-cream bg-white text-darkbrown hover:border-gold'
-                  }`}
+            {/* Variants Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mb-8">
+                <h3 className="font-sans text-[11px] text-primary/60 tracking-[0.2em] uppercase mb-4">{t('product.select_size', 'Select Size')}</h3>
+                <div className="flex flex-wrap gap-4">
+                  {product.variants.map((v, idx) => {
+                    const isSelected = selectedVariant?.id === v.id;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedVariant(v)}
+                        className={`px-6 py-3 rounded-full border-[1.5px] font-sans text-[13px] tracking-widest transition-all duration-300 ${
+                          isSelected 
+                            ? 'border-primary bg-primary text-white shadow-md' 
+                            : 'border-primary/20 text-primary hover:border-primary/50'
+                        }`}
+                      >
+                        {v.size}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Quantity and Actions Container */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+              
+              {/* Quantity Selector */}
+              <div className="flex items-center justify-between border-[1.5px] border-primary/20 rounded-full px-6 py-4 sm:w-40 bg-white/50 backdrop-blur-sm">
+                <button 
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  className="text-primary hover:text-accent-gold transition-colors p-1"
                 >
-                  {v.size}
+                  <FiMinus className="w-4 h-4" />
                 </button>
-              ))}
-            </div>
-          </div>
+                <span className="font-sans text-[16px] font-medium text-primary w-8 text-center">{qty}</span>
+                <button 
+                  onClick={() => setQty(qty + 1)}
+                  className="text-primary hover:text-accent-gold transition-colors p-1"
+                >
+                  <FiPlus className="w-4 h-4" />
+                </button>
+              </div>
 
-          <div className="mb-6 flex items-center gap-4">
-            <h3 className="text-xs md:text-sm font-semibold text-darkbrown uppercase tracking-wider">Quantity</h3>
-            <div className="flex items-center border border-cream rounded-lg bg-white overflow-hidden text-sm">
+              {/* Add to Cart Button */}
               <button 
-                onClick={() => setQty(Math.max(1, qty - 1))}
-                className="w-8 h-8 flex items-center justify-center text-darkbrown hover:bg-cream"
-              >-</button>
-              <span className="w-8 text-center font-medium">{qty}</span>
-              <button 
-                onClick={() => setQty(qty + 1)}
-                className="w-8 h-8 flex items-center justify-center text-darkbrown hover:bg-cream"
-              >+</button>
+                onClick={handleAddToCart}
+                disabled={!product.inStock}
+                className={`flex-grow flex items-center justify-center py-4 rounded-full font-sans text-[13px] tracking-[0.2em] uppercase transition-all duration-300 ${
+                  product.inStock 
+                    ? 'bg-primary text-background hover:bg-primary/90 hover:shadow-lg' 
+                    : 'bg-primary/10 text-primary/40 cursor-not-allowed'
+                }`}
+              >
+                {product.inStock ? t('common.add_to_cart', 'Add to Cart') : t('common.out_of_stock', 'Out of Stock')}
+              </button>
+              
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                className="flex items-center justify-center p-4 border-[1.5px] border-primary/20 rounded-full text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300"
+                aria-label="Share product"
+                title="Share this product"
+              >
+                <FiShare2 className="w-5 h-5" />
+              </button>
             </div>
-          </div>
 
-          <div className="flex gap-3 mt-auto">
-            <button 
-              onClick={handleAddToCart}
-              disabled={!product.inStock}
-              className={`flex-1 px-4 py-2 text-sm md:px-6 md:py-2.5 rounded-xl font-bold transition-transform ${
-                product.inStock 
-                  ? 'bg-gradient-to-r from-saffron to-gold text-white shadow-md hover:shadow-lg' 
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-            </button>
-            <button
-              onClick={handleShare}
-              className="w-10 h-10 md:w-11 md:h-11 rounded-xl border-2 border-gold flex items-center justify-center text-gold hover:bg-gold hover:text-white transition-colors shadow-sm"
-              aria-label="Share product"
-            >
-              <FiShare2 className="w-4 h-4 md:w-5 md:h-5" />
-            </button>
           </div>
         </div>
       </div>
