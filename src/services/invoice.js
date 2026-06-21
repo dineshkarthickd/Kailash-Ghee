@@ -1,220 +1,286 @@
 import jsPDF from 'jspdf';
 
 export const generateInvoicePDF = (orderData) => {
-  const doc = new jsPDF();
-  const pageWidth = doc.internal.pageSize.width;
-  const pageHeight = doc.internal.pageSize.height;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageWidth = doc.internal.pageSize.width;   // 210
+  const pageHeight = doc.internal.pageSize.height; // 297
 
-  // ─── BACKGROUND ───────────────────────────
-  // Main white background
-  doc.setFillColor(255, 255, 255);
+  // ── Color Palette ──────────────────────────────────────
+  const TEAL       = [42, 110, 120];   // header / accent
+  const TEAL_LIGHT = [224, 242, 244];  // table header bg
+  const TEAL_ROW   = [42, 110, 120];   // total row bg
+  const DARK       = [30, 30, 30];     // primary text
+  const MID        = [80, 80, 80];     // secondary text
+  const LIGHT_BG   = [245, 250, 251];  // page background
+  const WHITE      = [255, 255, 255];
+  const BORDER     = [200, 215, 218];  // light border
+
+  // ── Page background ────────────────────────────────────
+  doc.setFillColor(...LIGHT_BG);
   doc.rect(0, 0, pageWidth, pageHeight, 'F');
 
-  // Top header band - dark brown
-  doc.setFillColor(59, 31, 10);
-  doc.rect(0, 0, pageWidth, 45, 'F');
+  // ══════════════════════════════════════════════════════
+  // HEADER SECTION
+  // ══════════════════════════════════════════════════════
+  // White header card
+  doc.setFillColor(...WHITE);
+  doc.rect(0, 0, pageWidth, 38, 'F');
 
-  // Gold accent line below header
-  doc.setFillColor(212, 175, 55);
-  doc.rect(0, 45, pageWidth, 2, 'F');
-
-  // Bottom footer band
-  doc.setFillColor(59, 31, 10);
-  doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
-
-  // Gold accent line above footer
-  doc.setFillColor(212, 175, 55);
-  doc.rect(0, pageHeight - 22, pageWidth, 2, 'F');
-
-
-  // ─── HEADER ───────────────────────────────
-  // Brand name
+  // Company name – left
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(24);
-  doc.setTextColor(212, 175, 55);
-  doc.text('Kailash Ghee', pageWidth / 2, 20, { align: 'center' });
-
-  // Tagline
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(9);
-  doc.setTextColor(255, 248, 231);
-  doc.text('The Taste of Pure Tradition', pageWidth / 2, 30, { align: 'center' });
-
-  // INVOICE label
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(255, 248, 231);
-  doc.text('INVOICE', pageWidth / 2, 40, { align: 'center' });
-
-
-  // ─── GOLD DECORATIVE LINE ─────────────────
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.5);
-  doc.line(20, 55, pageWidth - 20, 55);
-
-
-  // ─── ORDER INFO + CUSTOMER DETAILS ────────
-  // Left side - Order details box
-  doc.setFillColor(255, 248, 231);
-  doc.roundedRect(15, 62, 80, 50, 3, 3, 'F');
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.3);
-  doc.roundedRect(15, 62, 80, 50, 3, 3, 'S');
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(59, 31, 10);
-  doc.text('ORDER DETAILS', 25, 71);
-
-  doc.setDrawColor(212, 175, 55);
-  doc.line(25, 73, 85, 73);
+  doc.setFontSize(16);
+  doc.setTextColor(...TEAL);
+  doc.text('Kailash Ghee', 14, 14);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.setTextColor(80, 50, 20);
-  doc.text('Order ID:', 25, 81);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${orderData.orderId}`, 55, 81);
+  doc.setTextColor(...MID);
+  doc.text('The Taste of Pure Tradition', 14, 21);
 
+  // "Order Confirmation" – right
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(...TEAL);
+  doc.text('Order Confirmation', pageWidth - 14, 16, { align: 'right' });
+
+  // Thin teal border under header
+  doc.setFillColor(...TEAL);
+  doc.rect(0, 38, pageWidth, 1.5, 'F');
+
+  // ── Thanks banner ──────────────────────────────────────
+  doc.setFillColor(...WHITE);
+  doc.rect(0, 40, pageWidth, 18, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(...DARK);
+  doc.text('Thanks for your order!!', pageWidth / 2, 50, { align: 'center' });
+
+  const customerFirstName = (orderData.customer?.name || orderData.customerName || 'Customer').split(' ')[0];
   doc.setFont('helvetica', 'normal');
-  doc.text('Date:', 25, 89);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${new Date().toLocaleDateString('en-IN')}`, 55, 89);
+  doc.setFontSize(9);
+  doc.setTextColor(...MID);
+  doc.text(
+    `Hi ${customerFirstName}, we've received your order #${orderData.orderId} and are working on it now.`,
+    pageWidth / 2, 57, { align: 'center' }
+  );
 
-  doc.setFont('helvetica', 'normal');
-  doc.text('Payment:', 25, 97);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(34, 139, 34);
-  doc.text('Cash on Delivery', 55, 97);
-
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(80, 50, 20);
-  doc.text('Status:', 25, 105);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 107, 0);
-  doc.text(`${orderData.orderStatus || 'Confirmed'}`, 55, 105);
-
-
-  // Right side - Customer details box
-  doc.setFillColor(255, 248, 231);
-  doc.roundedRect(110, 62, 80, 50, 3, 3, 'F');
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.3);
-  doc.roundedRect(110, 62, 80, 50, 3, 3, 'S');
-
+  // ── Teal "View your order details" banner ─────────────
+  doc.setFillColor(...TEAL);
+  doc.rect(14, 62, pageWidth - 28, 10, 'F');
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.setTextColor(59, 31, 10);
-  doc.text('CUSTOMER DETAILS', 120, 71);
+  doc.setTextColor(...WHITE);
+  doc.text('View your order details', pageWidth / 2, 68.5, { align: 'center' });
 
-  doc.setDrawColor(212, 175, 55);
-  doc.line(120, 73, 182, 73);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(59, 31, 10);
-  doc.text(`${orderData.customer?.name || orderData.customerName || 'N/A'}`, 120, 81);
+  // ══════════════════════════════════════════════════════
+  // TWO-COLUMN INFO SECTION
+  // ══════════════════════════════════════════════════════
+  const colLeft = 14;
+  const colMid  = 110;
+  let y = 80;
 
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(80, 50, 20);
-  doc.text(`${orderData.customer?.phone || orderData.customerPhone || 'N/A'}`, 120, 89);
+  doc.setFontSize(8.5);
+  doc.setTextColor(...MID);
+  doc.text('Order or shipping info:', colLeft, y);
 
-  const addressLines = doc.splitTextToSize(`${orderData.customer?.address || orderData.address || 'N/A'}`, 65);
-  doc.text(addressLines, 120, 97);
+  y += 7;
 
-  doc.text(`${orderData.customer?.city || orderData.city || 'N/A'}, ${orderData.customer?.state || orderData.state || 'N/A'}`, 120, 105);
-  doc.text(`PIN: ${orderData.customer?.pincode || orderData.pincode || 'N/A'}`, 120, 111);
+  // ── Left column headings ──────────────────────────────
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...DARK);
+  doc.text('Order Details:', colLeft, y);
 
+  // ── Right column headings ─────────────────────────────
+  doc.text('Shipping Address:', colMid, y);
 
-  // ─── ITEMS TABLE ──────────────────────────
-  // Table header
-  doc.setFillColor(59, 31, 10);
-  doc.roundedRect(15, 122, pageWidth - 30, 10, 2, 2, 'F');
+  y += 6;
+
+  // Left values
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...MID);
+  doc.text(`Order #:`, colLeft, y);
+  doc.setTextColor(...DARK);
+  doc.text(`${orderData.orderId}`, colLeft + 22, y);
+
+  // Right – Name
+  doc.setTextColor(...MID);
+  doc.text('Name:', colMid, y);
+  doc.setTextColor(...DARK);
+  doc.text(`${orderData.customer?.name || orderData.customerName || 'N/A'}`, colMid + 18, y);
+
+  y += 6;
+
+  // Date
+  doc.setTextColor(...MID);
+  doc.text('Date:', colLeft, y);
+  doc.setTextColor(...DARK);
+  doc.text(`${new Date().toLocaleDateString('en-IN')}`, colLeft + 22, y);
+
+  // Address
+  doc.setTextColor(...MID);
+  doc.text('Address:', colMid, y);
+  const addressStr = `${orderData.customer?.address || orderData.address || 'N/A'}`;
+  const addressLines = doc.splitTextToSize(addressStr, 72);
+  doc.setTextColor(...DARK);
+  doc.text(addressLines, colMid + 18, y);
+
+  y += 6;
+
+  // Payment
+  doc.setTextColor(...MID);
+  doc.text('Payment:', colLeft, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...TEAL);
+  doc.text('Cash on Delivery', colLeft + 22, y);
+  doc.setFont('helvetica', 'normal');
+
+  // City/State/Pin
+  doc.setTextColor(...MID);
+  doc.text('Phone No.:', colMid, y);
+  doc.setTextColor(...DARK);
+  doc.text(`${orderData.customer?.phone || orderData.customerPhone || 'N/A'}`, colMid + 18, y);
+
+  y += 6;
+
+  // Status
+  doc.setTextColor(...MID);
+  doc.text('Status:', colLeft, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...TEAL);
+  doc.text(`${(orderData.orderStatus || 'Confirmed').toUpperCase()}`, colLeft + 22, y);
+  doc.setFont('helvetica', 'normal');
+
+  // City
+  doc.setTextColor(...MID);
+  doc.text('City/State:', colMid, y);
+  doc.setTextColor(...DARK);
+  doc.text(
+    `${orderData.customer?.city || ''}, ${orderData.customer?.state || ''} - ${orderData.customer?.pincode || ''}`,
+    colMid + 18, y
+  );
+
+  // ══════════════════════════════════════════════════════
+  // ITEMS TABLE
+  // ══════════════════════════════════════════════════════
+  y += 14;
+
+  // Table header – teal background
+  doc.setFillColor(...TEAL);
+  doc.rect(14, y, pageWidth - 28, 9, 'F');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.setTextColor(212, 175, 55);
-  doc.text('ITEM', 25, 129);
-  doc.text('VARIANT', 95, 129);
-  doc.text('QTY', 125, 129);
-  doc.text('PRICE', 160, 129, { align: 'right' });
-  doc.text('TOTAL', 190, 129, { align: 'right' });
+  doc.setTextColor(...WHITE);
+
+  const col1 = 18;
+  const col2 = 108;
+  const col3 = 135;
+  const col4 = 162;
+  const col5 = pageWidth - 18;
+
+  doc.text('Items Ordered', col1, y + 6);
+  doc.text('Variant', col2, y + 6);
+  doc.text('Qty', col3, y + 6);
+  doc.text('Item Price', col4, y + 6);
+  doc.text('Total', col5, y + 6, { align: 'right' });
+
+  y += 9;
 
   // Table rows
-  let yPos = 140;
   orderData.items.forEach((item, index) => {
-    // Alternating row background
-    if (index % 2 === 0) {
-      doc.setFillColor(255, 252, 240);
-      doc.rect(15, yPos - 6, pageWidth - 30, 10, 'F');
-    }
+    const rowBg = index % 2 === 0 ? [255, 255, 255] : [240, 248, 249];
+    doc.setFillColor(...rowBg);
+    doc.rect(14, y, pageWidth - 28, 9, 'F');
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
-    doc.setTextColor(59, 31, 10);
-    doc.text(`${item.name}`, 25, yPos);
-    
-    // Account for variant object vs string
-    const variantLabel = item.variant?.size || item.variant || '-';
-    doc.text(`${variantLabel}`, 95, yPos);
-    
-    doc.text(`${item.qty}`, 125, yPos);
-    doc.text(`Rs.${item.price}`, 160, yPos, { align: 'right' });
-    doc.text(`Rs.${item.qty * item.price}`, 190, yPos, { align: 'right' });
+    doc.setTextColor(...DARK);
 
-    yPos += 12;
+    const itemName = doc.splitTextToSize(item.name || '', 85);
+    doc.text(itemName, col1, y + 6);
+
+    const variantLabel = item.variant?.size || item.variant || '-';
+    doc.text(`${variantLabel}`, col2, y + 6);
+    doc.text(`${item.qty}`, col3, y + 6);
+    doc.text(`Rs.${item.price}`, col4, y + 6);
+    doc.text(`Rs.${item.qty * item.price}`, col5, y + 6, { align: 'right' });
+
+    // Light bottom border
+    doc.setDrawColor(...BORDER);
+    doc.setLineWidth(0.2);
+    doc.line(14, y + 9, pageWidth - 14, y + 9);
+
+    y += 9;
   });
 
-  // Table bottom border
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.5);
-  doc.line(15, yPos, pageWidth - 15, yPos);
+  // ══════════════════════════════════════════════════════
+  // TOTALS SECTION — right-aligned rows
+  // ══════════════════════════════════════════════════════
+  y += 4;
+  const summaryX = 128;
+  const summaryW = pageWidth - 14 - summaryX;
 
+  const drawSummaryRow = (label, value, isBold = false, isTeal = false) => {
+    if (isTeal) {
+      doc.setFillColor(...TEAL_ROW);
+      doc.rect(summaryX, y - 4, summaryW, 9, 'F');
+      doc.setTextColor(...WHITE);
+    } else {
+      doc.setFillColor(...WHITE);
+      doc.rect(summaryX, y - 4, summaryW, 9, 'F');
+      doc.setTextColor(...DARK);
+    }
 
-  // ─── TOTAL SECTION ────────────────────────
-  yPos += 10;
+    doc.setDrawColor(...BORDER);
+    doc.setLineWidth(0.2);
+    doc.line(summaryX, y + 5, pageWidth - 14, y + 5);
 
-  // Total box
-  doc.setFillColor(59, 31, 10);
-  doc.roundedRect(pageWidth - 95, yPos - 5, 80, 20, 3, 3, 'F');
+    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+    doc.setFontSize(8.5);
+    doc.text(label, summaryX + 4, y + 2);
+    doc.text(value, pageWidth - 18, y + 2, { align: 'right' });
+    y += 9;
+  };
+
+  drawSummaryRow('Sub Total', `Rs.${orderData.totalAmount}`, false, false);
+  drawSummaryRow('Shipping', 'FREE', false, false);
+  drawSummaryRow('Estimated Sales Tax', 'Rs.0.00', false, false);
+  drawSummaryRow('Order Total', `Rs.${orderData.totalAmount}`, true, true);
+
+  // ══════════════════════════════════════════════════════
+  // FOOTER — "We are here to help"
+  // ══════════════════════════════════════════════════════
+  y += 14;
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(255, 248, 231);
-  doc.text('TOTAL AMOUNT:', pageWidth - 88, yPos + 7);
+  doc.setFontSize(9);
+  doc.setTextColor(...DARK);
+  doc.text('We are here to help', 14, y);
 
-  doc.setTextColor(212, 175, 55);
-  doc.setFontSize(12);
-  doc.text(`Rs.${orderData.totalAmount}`, pageWidth - 18, yPos + 7, { align: 'right' });
-
-
-  // ─── THANK YOU NOTE ───────────────────────
-  yPos += 35;
-
-  doc.setFillColor(255, 248, 231);
-  doc.roundedRect(15, yPos, pageWidth - 30, 25, 3, 3, 'F');
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.3);
-  doc.roundedRect(15, yPos, pageWidth - 30, 25, 3, 3, 'S');
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(59, 31, 10);
-  doc.text('Thank you for choosing Kailash Ghee!', pageWidth / 2, yPos + 10, { align: 'center' });
-
+  y += 6;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.setTextColor(120, 80, 40);
-  doc.text('Pure • Natural • Traditional | Delivering across Tamil Nadu', pageWidth / 2, yPos + 18, { align: 'center' });
+  doc.setTextColor(...MID);
+  doc.text('Call: +91 9360282155', 14, y);
+  y += 5;
+  doc.text('Email-Id: kailashgheeoddanchatram@gmail.com', 14, y);
+  y += 5;
+  doc.text('Oddanchatram, Tamil Nadu, India', 14, y);
 
-
-  // ─── FOOTER ───────────────────────────────
+  // Bottom teal bar
+  doc.setFillColor(...TEAL);
+  doc.rect(0, pageHeight - 10, pageWidth, 10, 'F');
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
-  doc.setTextColor(255, 248, 231);
-  doc.text('Kailash Ghee | info@kailashghee.com | +91 7010857596 | Chennai, Tamil Nadu', pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.setTextColor(...WHITE);
+  doc.text(
+    'Kailash Ghee  |  kailashgheeoddanchatram@gmail.com  |  +91 9360282155  |  Oddanchatram, Tamil Nadu',
+    pageWidth / 2, pageHeight - 4, { align: 'center' }
+  );
 
-
-  // ─── SAVE PDF ─────────────────────────────
+  // ── Save ───────────────────────────────────────────────
   doc.save(`KailashGhee-Invoice-${orderData.orderId}.pdf`);
 };
