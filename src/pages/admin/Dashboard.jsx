@@ -95,8 +95,8 @@ export const Dashboard = () => {
                       <FiShoppingBag className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                      <p className="font-sans font-medium text-primary">{order.customerDetails?.name || 'Guest'}</p>
-                      <p className="font-sans text-xs text-primary/50">Order ID: {order.id.slice(0, 8)}...</p>
+                      <p className="font-sans font-medium text-primary">{order.customer?.name || order.customerDetails?.name || 'Guest'}</p>
+                      <p className="font-sans text-xs text-primary/50">Order ID: {order.orderId || order.id?.slice(0, 8)}...</p>
                     </div>
                   </div>
                   

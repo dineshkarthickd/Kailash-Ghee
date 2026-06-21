@@ -94,8 +94,8 @@ export const ManageOrders = () => {
                     </td>
                     <td className="p-4">
                       <div className="flex flex-col">
-                        <span>{order.customerDetails?.name}</span>
-                        <span className="text-xs text-primary/50">{order.customerDetails?.phone}</span>
+                        <span className="font-medium">{order.customer?.name || order.customerDetails?.name || '—'}</span>
+                        <span className="text-xs text-primary/50">{order.customer?.phone || order.customerDetails?.phone || ''}</span>
                       </div>
                     </td>
                     <td className="p-4">₹{order.totalAmount}</td>
