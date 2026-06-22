@@ -22,9 +22,22 @@ export const Settings = () => {
             <h2 className="font-heading text-xl">Notifications</h2>
           </div>
           
-          <div className="flex flex-col gap-2 font-sans text-primary/70 bg-primary/5 p-6 border-[1px] border-primary/10 rounded-sm">
-            <p className="text-sm">Notifications are sent via Telegram to the admin automatically when orders are placed.</p>
-            <p className="text-sm italic">You do not need to configure anything here. The bot is already actively listening!</p>
+          <div className="flex flex-col gap-3 font-sans text-primary/70 bg-primary/5 p-6 border-[1px] border-primary/10 rounded-sm">
+            <div className="flex items-start gap-3">
+              <span className="text-green-600 text-lg mt-0.5">✉️</span>
+              <div>
+                <p className="text-sm font-medium text-primary mb-1">Email Notifications (Primary)</p>
+                <p className="text-sm">Admin order notifications and customer confirmation emails are sent automatically via EmailJS when an order is placed.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-blue-500 text-lg mt-0.5">📨</span>
+              <div>
+                <p className="text-sm font-medium text-primary mb-1">Telegram Notifications (Secondary / Backup)</p>
+                <p className="text-sm">Telegram notifications run alongside email as a backup channel. Telegram may be temporarily unavailable due to a government restriction in India — Email notifications will continue working regardless.</p>
+              </div>
+            </div>
+            <p className="text-xs italic text-primary/50 mt-1">No configuration needed — both channels are already active.</p>
           </div>
         </div>
 

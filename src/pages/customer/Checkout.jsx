@@ -10,6 +10,7 @@ import { generateOrderId } from '../../utils/generateOrderId';
 import { validateAddressForm } from '../../utils/validateForm';
 import { FiTruck, FiArrowLeft, FiLock } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { sendAdminEmail, sendCustomerEmail } from '../../services/email';
 
 export const Checkout = () => {
   const { user, loginWithGoogle } = useAuth();
@@ -86,18 +87,30 @@ export const Checkout = () => {
       };
 
       await createOrder(orderData);
-      
-      await sendAdminNotification({
-        orderId: orderData.orderId,
-        customerName: formData.name,
-        customerPhone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-        items: cartItems,
-        totalAmount: cartTotal
-      });
+
+      // ── Telegram notification (secondary/backup) ──────────────
+      // Wrapped in try/catch so a Telegram ban/failure never blocks
+      // the order confirmation or the email notifications.
+      try {
+        await sendAdminNotification({
+          orderId:       orderData.orderId,
+          customerName:  formData.name,
+          customerPhone: formData.phone,
+          address:       formData.address,
+          city:          formData.city,
+          state:         formData.state,
+          pincode:       formData.pincode,
+          items:         cartItems,
+          totalAmount:   cartTotal,
+        });
+      } catch (telegramErr) {
+        console.warn('Telegram notification failed (may be due to regional restriction):', telegramErr);
+      }
+
+      // ── EmailJS notifications (primary) ───────────────────────
+      // Fire-and-forget — run independently of Telegram result.
+      sendAdminEmail(orderData);    // notify admin
+      sendCustomerEmail(orderData); // confirm to customer
       
       clearCart();
       navigate(`/order-confirmation/${orderId}`);
