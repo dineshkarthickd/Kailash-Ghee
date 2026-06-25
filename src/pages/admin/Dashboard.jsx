@@ -3,6 +3,7 @@ import { useOrders } from '../../hooks/useOrders';
 import { Loader } from '../../components/common/Loader';
 import { Link } from 'react-router-dom';
 import { FiDollarSign, FiShoppingBag, FiClock, FiPlus, FiList, FiSettings, FiDownload } from 'react-icons/fi';
+import { generateReportPDF } from '../../services/report';
 
 export const Dashboard = () => {
   const { orders, loading } = useOrders();
@@ -74,7 +75,10 @@ export const Dashboard = () => {
             <Link to="/admin/settings" className="flex items-center gap-2 px-6 py-3 border-[1px] border-primary/20 bg-white/40 hover:bg-primary/5 transition-colors font-sans text-sm text-primary">
               <FiSettings className="stroke-[2]" /> Store Settings
             </Link>
-            <button className="flex items-center gap-2 px-6 py-3 border-[1px] border-primary/20 bg-white/40 hover:bg-primary/5 transition-colors font-sans text-sm text-primary">
+            <button
+              onClick={() => generateReportPDF(orders)}
+              className="flex items-center gap-2 px-6 py-3 border-[1px] border-primary/20 bg-white/40 hover:bg-primary/5 transition-colors font-sans text-sm text-primary"
+            >
               <FiDownload className="stroke-[2]" /> Download Report
             </button>
           </div>
