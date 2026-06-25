@@ -5,11 +5,9 @@ import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import { getSettings } from '../../firebase/settings';
 
-const DEFAULT_HERO = '/Hero.png';
-
 export const HeroBanner = () => {
   const { t } = useTranslation();
-  const [heroImage, setHeroImage] = useState(DEFAULT_HERO);
+  const [heroImage, setHeroImage] = useState(null);
 
   useEffect(() => {
     const loadHeroImage = async () => {
@@ -19,7 +17,6 @@ export const HeroBanner = () => {
           setHeroImage(settings.heroImageURL);
         }
       } catch (err) {
-        // Silently fall back to default local image
         console.warn('Could not load hero image from settings:', err);
       }
     };
@@ -29,33 +26,37 @@ export const HeroBanner = () => {
   return (
     <div className="relative min-h-[90vh] flex items-center overflow-hidden pt-20 lg:pt-24 pb-12 bg-hero-gradient">
 
-      {/* Desktop Background Image with Seamless Horizontal Fade */}
-      <div className="hidden lg:block absolute top-0 right-0 w-[60%] h-full z-0">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage: `url('${heroImage}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'left center',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 35%)',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 35%)'
-          }}
-        />
-      </div>
+      {heroImage && (
+        <>
+          {/* Desktop Background Image with Seamless Horizontal Fade */}
+          <div className="hidden lg:block absolute top-0 right-0 w-[60%] h-full z-0">
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: `url('${heroImage}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'left center',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 35%)',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 35%)'
+              }}
+            />
+          </div>
 
-      {/* Mobile Background Image with Seamless Vertical Fade */}
-      <div className="block lg:hidden absolute bottom-0 left-0 w-full h-[50%] z-0">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage: `url('${heroImage}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'top center',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)'
-          }}
-        />
-      </div>
+          {/* Mobile Background Image with Seamless Vertical Fade */}
+          <div className="block lg:hidden absolute bottom-0 left-0 w-full h-[50%] z-0">
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: `url('${heroImage}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'top center',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)'
+              }}
+            />
+          </div>
+        </>
+      )}
 
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 relative z-10 flex flex-col lg:flex-row items-center h-full">
 

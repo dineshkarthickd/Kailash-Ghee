@@ -1,31 +1,29 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useProducts } from '../../hooks/useProducts';
 import { BotanicalDecoration } from '../common/BotanicalDecoration';
+import aboutImage from '../../assets/about.png';
 
 export const AboutSection = () => {
   const { t } = useTranslation();
-  const { products } = useProducts();
-  const aboutImage = '/Hero.png';
 
   return (
-    <section className="py-12 lg:py-16 bg-background overflow-hidden relative">
-      <BotanicalDecoration position="right" className="scale-150 translate-y-10" />
+    <section className="py-16 lg:py-24 bg-background overflow-hidden relative">
+      <BotanicalDecoration position="right" className="scale-150 translate-y-10 z-10 opacity-30" />
 
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          {/* Image */}
-          <div className="relative aspect-[4/5] rounded-t-full bg-accent-peach/20 flex items-center justify-center p-8">
+          {/* Image (4:3 ratio as requested) */}
+          <div className="relative w-full aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center">
             <img 
               src={aboutImage} 
               alt="About Kailash Ghee" 
-              className="w-[85%] h-[85%] object-contain mix-blend-multiply drop-shadow-xl"
+              className="w-full h-full object-cover object-center"
             />
           </div>
 
-          {/* Text content */}
-          <div className="flex flex-col items-start text-left">
+          {/* Text content (Restored to original grid layout) */}
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             <span className="font-sans text-[12px] tracking-[0.3em] uppercase text-primary/50 mb-4">
               {t('home.our_story', 'Our Story')}
             </span>
