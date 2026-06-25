@@ -78,14 +78,22 @@ export const ProductDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left: Image Box */}
-          <div className="relative w-full aspect-[4/5] lg:aspect-square bg-[#F8F5F0] rounded-3xl overflow-hidden flex items-center justify-center p-8 lg:p-16 shadow-[inset_0_0_100px_rgba(0,0,0,0.02)]">
-            <div className="absolute inset-0 bg-gradient-to-tr from-accent-peach/20 to-transparent mix-blend-multiply"></div>
+          <div className="relative w-full aspect-[4/5] lg:aspect-square rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center">
+            
+            {product.isOffer && (
+              <div className="absolute top-6 right-6 z-20">
+                <span className="bg-accent-gold text-white font-sans text-[11px] tracking-widest uppercase px-4 py-2 shadow-lg">
+                  {product.offerType === 'combo' ? 'Combo Offer' : 'Special Offer'}
+                </span>
+              </div>
+            )}
+
             <img 
               src={product.imageURL || 'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?q=80&w=800&auto=format&fit=crop'} 
               alt={name} 
               loading="lazy"
               onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?q=80&w=800&auto=format&fit=crop'; }}
-              className="relative z-10 w-full h-full object-contain mix-blend-multiply drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-out"
+              className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700 ease-out"
             />
           </div>
 
@@ -100,9 +108,26 @@ export const ProductDetail = () => {
               {name}
             </h1>
             
-            <p className="font-sans text-2xl text-primary font-medium mb-8">
-              ₹{selectedVariant?.price}
-            </p>
+            <div className="flex items-center gap-4 mb-2">
+              {product.isOffer && selectedVariant?.originalPrice && (
+                <p className="font-sans text-xl text-primary/40 line-through">
+                  ₹{selectedVariant.originalPrice}
+                </p>
+              )}
+              <p className="font-sans text-3xl text-primary font-medium">
+                ₹{selectedVariant?.price}
+              </p>
+            </div>
+            
+            {product.isOffer && selectedVariant?.originalPrice && selectedVariant.price < selectedVariant.originalPrice ? (
+              <div className="mb-8">
+                <span className="inline-block bg-[#E8F3E8] text-[#2C5E2E] border-[1px] border-[#C3E2C4] font-sans text-xs tracking-wider uppercase px-3 py-1.5 rounded-sm">
+                  You Save ₹{selectedVariant.originalPrice - selectedVariant.price} ({Math.round(((selectedVariant.originalPrice - selectedVariant.price) / selectedVariant.originalPrice) * 100)}%)
+                </span>
+              </div>
+            ) : (
+              <div className="mb-8"></div>
+            )}
             
             <div className="w-16 h-[1px] bg-accent-gold mb-8"></div>
             

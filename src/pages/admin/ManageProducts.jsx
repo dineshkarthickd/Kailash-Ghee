@@ -14,7 +14,8 @@ export const ManageProducts = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', nameTA: '', description: '', descriptionTA: '',
-    category: 'cow_ghee', price: '', size: '500ml'
+    category: 'cow_ghee', price: '', size: '500ml',
+    isOffer: false, offerType: 'combo', originalPrice: ''
   });
   const [imageFile, setImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,8 +54,14 @@ export const ManageProducts = () => {
         descriptionTA,
         category: formData.category,
         imageURL,
+        isOffer: formData.isOffer,
+        offerType: formData.isOffer ? formData.offerType : null,
         variants: [
-          { size: formData.size, price: Number(formData.price) }
+          { 
+            size: formData.size, 
+            price: Number(formData.price),
+            ...(formData.isOffer && formData.originalPrice ? { originalPrice: Number(formData.originalPrice) } : {})
+          }
         ],
         inStock: existingProduct ? existingProduct.inStock : true
       };
@@ -70,7 +77,7 @@ export const ManageProducts = () => {
       
       setIsAdding(false);
       setEditingId(null);
-      setFormData({ name: '', nameTA: '', description: '', descriptionTA: '', category: 'cow_ghee', price: '', size: '500ml' });
+      setFormData({ name: '', nameTA: '', description: '', descriptionTA: '', category: 'cow_ghee', price: '', size: '500ml', isOffer: false, offerType: 'combo', originalPrice: '' });
       setImageFile(null);
       refetch();
     } catch (error) {
@@ -127,6 +134,9 @@ export const ManageProducts = () => {
       category: product.category || 'cow_ghee',
       price: product.variants[0]?.price || '',
       size: product.variants[0]?.size || '500ml',
+      isOffer: product.isOffer || false,
+      offerType: product.offerType || 'combo',
+      originalPrice: product.variants[0]?.originalPrice || '',
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -170,7 +180,7 @@ export const ManageProducts = () => {
                 if (isAdding) {
                   setIsAdding(false);
                   setEditingId(null);
-                  setFormData({ name: '', nameTA: '', description: '', descriptionTA: '', category: 'cow_ghee', price: '', size: '500ml' });
+                  setFormData({ name: '', nameTA: '', description: '', descriptionTA: '', category: 'cow_ghee', price: '', size: '500ml', isOffer: false, offerType: 'combo', originalPrice: '' });
                 } else {
                   setIsAdding(true);
                 }
@@ -192,8 +202,30 @@ export const ManageProducts = () => {
               <input type="text" placeholder="Name (Tamil - Optional)" value={formData.nameTA} onChange={e => setFormData({...formData, nameTA: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm" />
               <textarea placeholder="Description (English)" required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary md:col-span-2 font-sans text-sm"></textarea>
               <textarea placeholder="Description (Tamil - Optional)" value={formData.descriptionTA} onChange={e => setFormData({...formData, descriptionTA: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary md:col-span-2 font-sans text-sm"></textarea>
-              <input type="text" placeholder="Variant Size (e.g., 500ml)" required value={formData.size} onChange={e => setFormData({...formData, size: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm" />
-              <input type="number" placeholder="Price (₹)" required value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm" />
+              
+              <div className="md:col-span-2 flex items-center gap-4 bg-primary/5 p-4 border border-primary/20">
+                <label className="flex items-center gap-2 cursor-pointer font-sans text-sm text-primary font-medium">
+                  <input type="checkbox" checked={formData.isOffer} onChange={e => setFormData({...formData, isOffer: e.target.checked})} className="accent-primary w-4 h-4" />
+                  Is this a Special Offer / Combo?
+                </label>
+                
+                {formData.isOffer && (
+                  <select value={formData.offerType} onChange={e => setFormData({...formData, offerType: e.target.value})} className="bg-white border border-primary/20 p-2 text-sm font-sans outline-none focus:border-primary ml-auto">
+                    <option value="combo">Combo Offer</option>
+                    <option value="single">Single Product Offer</option>
+                  </select>
+                )}
+              </div>
+
+              <input type="text" placeholder="Variant Size (e.g., 500ml or 1L x 2)" required value={formData.size} onChange={e => setFormData({...formData, size: e.target.value})} className="bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm" />
+              
+              <div className="flex gap-2">
+                {formData.isOffer && (
+                  <input type="number" placeholder="Orig. Price (₹)" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} className="w-1/2 bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm line-through text-primary/60" />
+                )}
+                <input type="number" placeholder={formData.isOffer ? "Offer Price (₹)" : "Price (₹)"} required value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className={`${formData.isOffer ? 'w-1/2' : 'w-full'} bg-white/50 border border-primary/20 p-3 outline-none focus:border-primary font-sans text-sm font-medium`} />
+              </div>
+
               <div className="md:col-span-2 mt-2">
                 <label className="block text-xs uppercase tracking-widest text-primary/70 mb-2 font-sans">Product Image</label>
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className="w-full bg-white/50 border border-primary/20 p-3 font-sans text-sm" required={!editingId} />
