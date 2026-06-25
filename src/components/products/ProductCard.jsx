@@ -20,7 +20,16 @@ export const ProductCard = ({ product }) => {
     <div className="w-full max-w-[320px] mx-auto bg-transparent border-[1px] border-primary/20 flex flex-col group hover:border-primary/40 transition-colors duration-500">
       
       {/* Full Width Image Area */}
-      <Link to={`/products/${product.id}`} className="block w-full aspect-square overflow-hidden bg-transparent border-b-[1px] border-primary/10">
+      <Link to={`/products/${product.id}`} className="relative block w-full aspect-square overflow-hidden bg-transparent border-b-[1px] border-primary/10">
+        
+        {product.isOffer && (
+          <div className="absolute top-4 right-4 z-10">
+            <span className="bg-accent-gold text-white font-sans text-[10px] tracking-widest uppercase px-3 py-1.5 shadow-md">
+              {product.offerType === 'combo' ? 'Combo Offer' : 'Special Offer'}
+            </span>
+          </div>
+        )}
+
         <img 
           src={product.imageURL || 'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?q=80&w=800&auto=format&fit=crop'} 
           alt={name} 
@@ -46,9 +55,16 @@ export const ProductCard = ({ product }) => {
           {product.variants?.[0]?.size || 'Jar'}
         </span>
         
-        <span className="font-sans text-[16px] text-primary font-medium mb-6">
-          ₹{product.variants?.[0]?.price || 0}
-        </span>
+        <div className="flex items-center justify-center gap-3 mb-6">
+          {product.isOffer && product.variants?.[0]?.originalPrice && (
+            <span className="font-sans text-[14px] text-primary/40 line-through">
+              ₹{product.variants[0].originalPrice}
+            </span>
+          )}
+          <span className="font-sans text-[16px] text-primary font-medium">
+            ₹{product.variants?.[0]?.price || 0}
+          </span>
+        </div>
 
         <button 
           className="w-full border-[1px] border-primary/30 text-primary py-2.5 px-6 uppercase tracking-widest text-[12px] hover:bg-primary hover:text-white transition-all duration-300"
