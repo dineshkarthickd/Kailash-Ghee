@@ -193,9 +193,9 @@ export const generateReportPDF = (orders) => {
   let bx = 14;
   barSegments.forEach(seg => {
     const sw = totalOrders > 0 ? (pageWidth - 28) * (seg.count / totalOrders) : 0;
-    if (sw > 0) { doc.setFillColor(...seg.color); doc.rect(bx, y, sw, 7, 'F'); bx += sw; }
+    if (sw > 0) { doc.setFillColor(...seg.color); doc.rect(bx, y, sw, 5, 'F'); bx += sw; }
   });
-  y += 10;
+  y += 14;
   let lx = 14;
   barSegments.forEach(seg => {
     doc.setFillColor(...seg.color);
