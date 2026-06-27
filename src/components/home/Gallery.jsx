@@ -48,12 +48,20 @@ export const Gallery = () => {
     };
   }, [resetTimer]);
   
-  // Auto-scroll active thumbnail into view
+  // Auto-scroll active thumbnail horizontally into view without affecting vertical page scroll
   useEffect(() => {
     if (thumbContainerRef.current) {
-      const activeThumb = thumbContainerRef.current.children[currentIndex];
+      const container = thumbContainerRef.current;
+      const activeThumb = container.children[currentIndex];
       if (activeThumb) {
-        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Calculate the position to center the active thumbnail in the container
+        const containerCenter = container.clientWidth / 2;
+        const thumbCenter = activeThumb.offsetLeft + (activeThumb.clientWidth / 2);
+        
+        container.scrollTo({
+          left: thumbCenter - containerCenter,
+          behavior: 'smooth'
+        });
       }
     }
   }, [currentIndex]);
