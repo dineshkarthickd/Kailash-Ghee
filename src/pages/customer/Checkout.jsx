@@ -89,28 +89,16 @@ export const Checkout = () => {
       await createOrder(orderData);
 
       // ── Telegram notification (secondary/backup) ──────────────
-      // Wrapped in try/catch so a Telegram ban/failure never blocks
-      // the order confirmation or the email notifications.
       try {
-        await sendAdminNotification({
-          orderId:       orderData.orderId,
-          customerName:  formData.name,
-          customerPhone: formData.phone,
-          address:       formData.address,
-          city:          formData.city,
-          state:         formData.state,
-          pincode:       formData.pincode,
-          items:         cartItems,
-          totalAmount:   cartTotal,
-        });
-      } catch (telegramErr) {
-        console.warn('Telegram notification failed (may be due to regional restriction):', telegramErr);
+        await sendAdminNotification(orderData)
+      } catch (err) {
+        console.log('Telegram notification skipped:', err)
       }
 
-      // ── EmailJS notifications (primary) ───────────────────────
-      // Fire-and-forget — run independently of Telegram result.
-      sendAdminEmail(orderData);    // notify admin
-      sendCustomerEmail(orderData); // confirm to customer
+      // These must run regardless of
+      // Telegram success/failure:
+      sendAdminEmail(orderData)
+      sendCustomerEmail(orderData)
       
       clearCart();
       navigate(`/order-confirmation/${orderId}`);
