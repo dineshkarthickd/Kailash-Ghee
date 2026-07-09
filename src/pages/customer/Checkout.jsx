@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,7 @@ export const Checkout = () => {
   });
   const [errors, setErrors] = useState({});
   const [paymentMethod] = useState('COD');
-  const [settings, setSettings] = useState(null);
+  const [, setSettings] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {

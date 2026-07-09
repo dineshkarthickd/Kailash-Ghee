@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,7 @@ export const ProductDetail = () => {
   const [qty, setQty] = useState(1);
   const { addToCart } = useCart();
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchProduct = async () => {

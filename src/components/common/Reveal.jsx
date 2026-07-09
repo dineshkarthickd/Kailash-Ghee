@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const Reveal = ({ children, className = '', delay = 0 }) => {
+export const Reveal = ({ children, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 

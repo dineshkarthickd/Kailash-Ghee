@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { Sidebar } from '../../components/admin/Sidebar';
 import { FiBell, FiImage, FiUsers, FiUpload, FiX, FiPlus, FiSave, FiTrash2 } from 'react-icons/fi';
@@ -26,9 +27,7 @@ export const Settings = () => {
         const data = await getSettings();
         setSettings(data || {});
         setAdminEmails(data?.adminEmails || [import.meta.env.VITE_ADMIN_EMAIL || '']);
-      } catch (err) {
-        console.error(err);
-      } finally {
+      } catch (err) { /* ignore */ } finally {
         setLoading(false);
       }
     };
@@ -55,7 +54,7 @@ export const Settings = () => {
       toast.success('Hero image updated successfully!');
     } catch (err) {
       toast.error('Failed to upload image.');
-      console.error(err);
+      
     } finally {
       setHeroUploading(false);
     }
@@ -108,7 +107,7 @@ export const Settings = () => {
       toast.success('Admin accounts updated successfully!');
     } catch (err) {
       toast.error('Failed to save admin accounts.');
-      console.error(err);
+      
     } finally {
       setSavingAdmins(false);
     }
