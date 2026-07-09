@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components, react-hooks/set-state-in-effect */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { getSettings } from '../firebase/settings';

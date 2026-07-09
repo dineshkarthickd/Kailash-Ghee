@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 export const ManageOrders = () => {
   const { orders, loading, refetch } = useOrders();
-  const [updatingId, setUpdatingId] = useState(null);
+  const [, setUpdatingId] = useState(null);
   const [filter, setFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedRow, setExpandedRow] = useState(null);
